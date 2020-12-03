@@ -1,0 +1,126 @@
+.login{
+    height: 100%;
+    min-height: 100%;
+    width: 100%;
+    overflow: hidden;
+    // background: papayawhip
+    .copyright{
+        background:#327cef;
+
+        width: 100%;
+        text-align: center;
+        color: #ccc;
+    }
+}
+.conttainer{
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(#52a7ff,#327cef);
+    .img2{
+        height: 137px;
+        width: 100%;
+        background:#327cef;
+
+    }
+}
+.wrap{
+    // height: 100%;;
+    position: relative;
+    background: linear-gradient(#52a7ff,#327cef);
+    .img1{
+        margin-left: 100px;
+        margin-top: 50px;
+        height: 60%;
+    }
+}
+.dl{
+    height:calc(300px - 20px) ;
+    width:calc(300px - 40px) ;
+    position: fixed;
+    top:200px;
+    right: 150px;
+    border: 1px solid #fff;
+    background: #fff;
+    padding:30px; 
+    .d1{
+        height: 40px;
+        box-sizing: border-box;
+        margin: 16px 0;
+    }
+    .c1 span{
+        height: 100%;
+        width: 100%;
+        display: block; 
+        font-size: 32px;
+        font-weight: 600;
+        text-align: center;
+        line-height: 32px; 
+        color: #409eff;
+    }
+    .c2,.c3{
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        padding-left: 20px; 
+        align-items: center;
+        input{
+            border: none;
+            height: 100%;
+            width: 200px;
+            font-size: 14px;
+            color: #909399;
+            margin-left: 10px;
+        }
+        i{
+            color: #ccc;
+        }
+    }
+    .c4{
+        display: flex;
+        justify-content: space-around;
+        font-size: 13px;
+        color: #ff0000;
+        height: 40px;
+        align-items: center;
+        
+    }
+    .c5{
+        button{
+            height: 100%;
+            width: 100%;
+            background: #409eff;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            font-size: 14px;
+        }
+    }
+    .c6{
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        padding-left: 20px; 
+        align-items: center;
+        el-select{
+            border: none;
+            height: 100%;
+            width: 210px;
+            font-size: 14px;
+            color: #909399;
+            margin-left: 10px;
+        }
+        i{
+            color: #ccc;
+        }
+    }
+    
+    
+}
+.logo{
+    height: 100%;
+    width: 100%;
+    // background: #fff;
+    img{
+        margin-top: 20px;
+    }
+}
