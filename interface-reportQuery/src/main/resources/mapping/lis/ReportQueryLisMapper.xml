@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bsoft.mapper.lis.ReportQueryLisMapper">
+
+    <!--检验报告列表-->
+    <select id="getLisRecord" parameterType="map" resultType="java.util.Map">
+        select * from v_getLisRecord t where 1=1
+        <if test="idCard!=null and idCard !='' ">
+            and "idCard"  in (${idCard})
+        </if>
+        <if test="rId!=null and rId !='' ">
+            and "rId" =#{rId}
+        </if>
+
+    </select>
+    <!--检验报告列表详细信息-->
+    <select id="getLisDetails" parameterType="map" resultType="java.util.Map">
+        select * from v_getLisDetails t where 1=1
+        <if test="rId!=null and rId !='' ">
+            and "rId" =#{rId}
+        </if>
+
+    </select>
+    <select id="getTestItems" parameterType="map" resultType="java.util.Map">
+        select * from v_getTestItems t where 1=1
+        <if test="XMMC!=null and XMMC !='' ">
+            and (XMMC like '%'||#{XMMC}||'%' or PYM like '%'||upper(#{XMMC})||'%')
+        </if>
+        <if test="XMID!=null and XMID !='' ">
+            and "XMID"  in (${XMID})
+        </if>
+
+    </select>
+    <select id="getTestItemsDetails" parameterType="map" resultType="java.util.Map">
+        select * from v_getTestItemsDetails t where 1=1
+        <if test="XMID!=null and XMID !='' ">
+            and "XMID" =#{XMID}
+        </if>
+
+    </select>
+
+
+    <select id="getMax" parameterType="java.util.Map" resultType="java.lang.Long">
+        SELECT DQZ FROM GY_XHB
+        WHERE 1 = 1
+        <if test="bmc!=null and bmc!=''">
+            AND BM = #{bmc}
+        </if>
+    </select>
+
+    <insert id="insertMax" parameterType="java.util.Map">
+		INSERT INTO GY_XHB (BM, DQZ, ZZ, RQ)
+		VALUES (#{bmc}, #{dqz}, 1, sysdate)
+	</insert>
+
+    <update id="updateMax" parameterType="java.util.Map">
+        update GY_XHB set
+        <if test="dqz!=null and dqz!=0">
+            DQZ = #{dqz}
+        </if>
+        where BM = #{bmc}
+    </update>
+    <insert id="saveLisRequest" parameterType="map">
+		INSERT INTO
+		L_LIS_SQD(
+		doctrequestno      ,
+        requesttime        ,
+        requester          ,
+        sqdstatus          ,
+        stayhospitalmode   ,
+        brxz               ,
+        patientid          ,
+        patientname        ,
+        sex                ,
+        age                ,
+        age_unit           ,
+        section            ,
+        bed_no             ,
+        requestmode        ,
+        diagnostic         ,
+        examinaim          ,
+        examinaimcode      ,
+        hislb              ,
+        jzxh               ,
+        brid               ,
+        jgid               ,
+        djrq               ,
+        sfzh               ,
+        lxdh               ,
+        fphm               ,
+        sampletype         ,
+        birthday
+		)
+		VALUES(
+		#{doctrequestno      },
+        #{requesttime        },
+        #{requester          },
+        #{sqdstatus          },
+        #{stayhospitalmode   },
+        #{brxz               },
+        #{patientid          },
+        #{patientname        },
+        #{sex                },
+        #{age                },
+        #{age_unit           },
+        #{section            },
+        #{bed_no             },
+        #{requestmode        },
+        #{diagnostic         },
+        #{examinaim          },
+        #{examinaimcode      },
+        #{hislb              },
+        #{jzxh               },
+        #{brid               },
+        #{jgid               },
+        #{djrq               },
+        #{sfzh},
+        #{lxdh               },
+        #{fphm               },
+        #{sampletype         },
+        #{birthday           }
+		)
+	</insert>
+
+    <insert id="saveLisRequestDetail" parameterType="map">
+		INSERT INTO
+		L_LIS_SQDMX (
+		doctrequestno,
+        prehyid      ,
+        ztmc         ,
+        hyid         ,
+        ylxh         ,
+        ylmc         ,
+        dj           ,
+        sl           ,
+        feestatus    ,
+        sampletype   ,
+        zxpb         ,
+        cxbz         ,
+        mfxm         ,
+        xmlba        ,
+        jgid         ,
+        bz           ,
+        jlxh         ,
+        yjxh
+
+		)
+		VALUES(
+		#{doctrequestno},
+        #{prehyid      },
+        #{ztmc         },
+        #{hyid         },
+        #{ylxh         },
+        #{ylmc         },
+        #{dj           },
+        #{sl           },
+        #{feestatus    },
+        #{sampletype   },
+        #{zxpb         },
+        #{cxbz         },
+        #{mfxm         },
+        #{xmlba        },
+        #{jgid         },
+        #{bz           },
+        #{jlxh         },
+        #{yjxh         }
+
+		)
+	</insert>
+    <select id="getTubeParam" parameterType="java.util.Map"
+            resultType="java.util.Map">
+		SELECT CSZ1,CSZ2 From V_LIS_XTCS Where JGID = 1 And CSMC = 'MZSQDSGF'
+	</select>
+
+    <select id="getLisByTube" parameterType="java.util.Map" resultType="java.util.Map">
+		select * from (
+		SELECT DISTINCT  A.YBLX,
+	                A.XMLBA,
+	                A.BQLX,
+	                A.FHLX,
+	                A.XMLBB,
+	                (SELECT B.SRM3 FROM V_LIS_SGLB B WHERE B.LBXH = A.XMLBA) SRM3,
+	                A.BLOODTYPE,
+	                A.ZXKS
+	  FROM V_LIS_ZHYZ A
+	 WHERE A.HYID IN (${hyid}) ORDER BY A.XMLBA) b where b.SRM3 > 0 ORDER BY b.XMLBA
+	</select>
+
+
+    <select id="getNeedleParam" parameterType="java.util.Map"
+            resultType="java.util.Map">
+		SELECT  CSZ1, CSZ2 From V_LIS_XTCS Where JGID = 1 And CSMC = 'MZSQDZTF'
+	</select>
+
+    <select id="getLisByNeedle" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT DISTINCT  A.YBLX,
+	                A.XMLBA,
+	                A.BQLX,
+	                A.FHLX,
+	                A.XMLBB,
+	                (SELECT B.SRM3 FROM V_LIS_SGLB B WHERE B.LBXH = A.XMLBA) SRM3,
+	                A.BLOODTYPE,
+	                A.ZXKS
+	  FROM V_LIS_ZHYZ A
+	 WHERE A.HYID IN (${hyid})  ORDER BY A.XMLBA
+	</select>
+
+
+    <select id="getBloodParam" parameterType="java.util.Map"
+            resultType="java.util.Map">
+		SELECT CSZ1 ,CSZ2 From V_LIS_XTCS Where  JGID = 1 And CSMC = 'MZSQDCXF'
+	</select>
+
+    <select id="getLisByBlood" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT DISTINCT  A.YBLX,
+	                A.XMLBA,
+	                A.BQLX,
+	                A.FHLX,
+	                A.XMLBB,
+	                (SELECT B.SRM3 FROM V_LIS_SGLB B WHERE B.LBXH = A.XMLBA) SRM3,
+	                A.BLOODTYPE,
+	                A.ZXKS
+	  FROM V_LIS_ZHYZ A
+	 WHERE A.HYID IN (${hyid}) and BLOODTYPE = 1 ORDER BY A.XMLBA
+
+	</select>
+    <select id="getTestBblx" parameterType="map" resultType="java.util.Map">
+        select * from v_getTestBblx t where
+        sampletype in (${YBLX_XZ})
+
+
+    </select>
+</mapper>

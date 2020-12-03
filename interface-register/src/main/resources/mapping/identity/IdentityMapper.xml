@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bsoft.mapper.identity.IdentityMapper">
+
+    <select id="getIdentity" parameterType="map" resultType="java.util.Map">
+        select dqz as "dqz", dzz as "dzz" from
+        <if test="ms!=null and ms!='' ">
+            GY_IDENTITY_MS
+        </if>
+        <if test="ys!=null and ys!='' ">
+            GY_IDENTITY_YS
+        </if>
+        <if test="emr!=null and emr!='' ">
+            GY_IDENTITY_EMR
+        </if>
+        <if test="zy!=null and zy!='' ">
+            GY_IDENTITY_ZY
+        </if>
+        <if test="ghyy!=null and ghyy!='' ">
+            GY_IDENTITY_GHYY
+        </if>
+        <if test="pd!=null and pd!='' ">
+            gy_identity_pd
+        </if>
+        <if test="jhzf!=null and jhzf!='' ">
+            gy_identity_jhzf
+        </if>
+        where bmc = #{bmc}
+    </select>
+
+    <update id="updateIdentity" parameterType="map" >
+
+        update
+        <if test="ms!=null and ms!='' ">
+            GY_IDENTITY_MS
+        </if>
+        <if test="ys!=null and ys!='' ">
+            GY_IDENTITY_YS
+        </if>
+        <if test="emr!=null and emr!='' ">
+            GY_IDENTITY_EMR
+        </if>
+        <if test="zy!=null and zy!='' ">
+            GY_IDENTITY_ZY
+        </if>
+        <if test="ghyy!=null and ghyy!='' ">
+            GY_IDENTITY_GHYY
+        </if>
+        <if test="pd!=null and pd!='' ">
+            gy_identity_pd
+        </if>
+        <if test="jhzf!=null and jhzf!='' ">
+            gy_identity_jhzf
+        </if>
+        set dqz = #{dqz}+dzz where dqz = #{dqz} and bmc = #{bmc}
+
+    </update>
+</mapper>

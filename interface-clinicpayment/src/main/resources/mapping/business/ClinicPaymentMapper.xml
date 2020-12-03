@@ -1,0 +1,571 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bsoft.mapper.business.ClinicPaymentMapper">
+
+    <!--门诊就诊记录-->
+    <select id="getMedicalRecords" parameterType="map" resultType="java.util.Map">
+        select * from v_getMedicalRecords t where 1=1
+        <if test="patientId!=null and patientId !='' ">
+            and "patientId" =#{patientId}
+        </if>
+        <if test="idCard!=null and idCard !='' ">
+            and "idCard" in (${idCard})
+        </if>
+        <if test="pendingPaid!=null and pendingPaid !='' ">
+            and "pendingPaid" = #{pendingPaid}
+        </if>
+        <if test="visitingId!=null and visitingId !='' ">
+            and "visitingId" = #{visitingId}
+        </if>
+        <if test="hospitalId!=null and hospitalId !='' ">
+            and "hospitalId" = #{hospitalId}
+        </if>
+    </select>
+    <!--获取处方支付列表-->
+    <select id="getPrescriptionPayment" parameterType="map" resultType="java.util.Map">
+        select * from v_getPrescriptionPayment t where 1=1
+        <if test="visitingId!=null and visitingId !='' ">
+            and "visitingId" =#{visitingId}
+        </if>
+        <if test="idCard!=null and idCard !='' ">
+            and "idCard" in (${idCard})
+        </if>
+        <if test="hospitalId!=null and hospitalId !='' ">
+            and "hospitalId" =#{hospitalId}
+        </if>
+        <if test="type!=null and type !='' ">
+            and "type" =#{type}
+        </if>
+        <if test="patientId!=null and patientId !='' ">
+            and "patientId" =#{patientId}
+        </if>
+    </select>
+    <!--获取处置支付列表-->
+    <select id="getDisposalPayment" parameterType="map" resultType="java.util.Map">
+        select * from v_getDisposalPayment t where "paymentState"=0
+        <if test="visitingId!=null and visitingId !='' ">
+            and "visitingId" =#{visitingId}
+        </if>
+        <if test="idCard!=null and idCard !='' ">
+            and "idCard" in (${idCard})
+        </if>
+        <if test="hospitalId!=null and hospitalId !='' ">
+            and "hospitalId" =#{hospitalId}
+        </if>
+    </select>
+    <!--获取处方明细列表-->
+    <select id="getPrescriptionDetailed" parameterType="map" resultType="java.util.Map">
+        select * from v_getPrescriptionDetailed t where 1=1
+        <if test="prescriptionNumber!=null and prescriptionNumber !='' ">
+            and "prescriptionNumber" in (${prescriptionNumber})
+        </if>
+        <if test="hospitalId!=null and hospitalId !='' ">
+            and "hospitalId" =#{hospitalId}
+        </if>
+    </select>
+    <!--获取处置明细列表-->
+    <select id="getDisposalDetailed" parameterType="map" resultType="java.util.Map">
+        select * from v_getDisposalDetailed t where 1=1
+        <if test="disposalNumber!=null and disposalNumber !='' ">
+            and "disposalNumber" =#{disposalNumber}
+        </if>
+        <if test="hospitalId!=null and hospitalId !='' ">
+            and "hospitalId" =#{hospitalId}
+        </if>
+    </select>
+
+    <!--结算处置-->
+    <select id="settlementDisposal" parameterType="java.util.Map" statementType="CALLABLE">
+        {  call clinicPayment_package.pro_settlementDisposal(
+                       #{prm_hospitalId,                   mode=IN, jdbcType=VARCHAR},
+                       #{prm_disposalNumber,               mode=IN, jdbcType=VARCHAR},
+                       #{prm_visitingId,                   mode=IN, jdbcType=VARCHAR},
+                       #{prm_payedTime,                    mode=IN, jdbcType=VARCHAR},
+                       #{prm_payAmount,                    mode=IN, jdbcType=VARCHAR},
+                       #{prm_paymentMethod,                mode=IN, jdbcType=VARCHAR},
+                       #{prm_dataSources,                   mode=IN, jdbcType=VARCHAR},
+                       #{prm_orderNumber,                  mode=IN, jdbcType=VARCHAR},
+                       #{prm_appCode,                      mode=OUT, jdbcType=VARCHAR},
+                       #{prm_errorMsg,                     mode=OUT, jdbcType=VARCHAR}
+                 )
+        }
+  </select>
+
+    <!--获取处方已支付列表-->
+    <select id="getPrescriptionPaymented" parameterType="map" resultType="java.util.Map">
+        select * from v_getPrescriptionPaymented t where 1=1
+        <if test="visitingId!=null and visitingId !='' ">
+            and "visitingId" =#{visitingId}
+        </if>
+        <if test="discrimination!=null and discrimination !='' ">
+            and "discrimination" =#{discrimination}
+        </if>
+        <if test="invoiceNumber!=null and invoiceNumber !='' ">
+            and "invoiceNumber" =#{invoiceNumber}
+        </if>
+        <if test="paymentMethod!=null and paymentMethod !='' ">
+            and "paymentMethod" =#{paymentMethod}
+        </if>
+        <if test="idCard!=null and idCard !='' ">
+            and "idCard" in (${idCard})
+        </if>
+        <if test="prescriptionNumber!=null and prescriptionNumber !='' ">
+            and "prescriptionNumber" =#{prescriptionNumber}
+        </if>
+        <if test="hospitalId!=null and hospitalId !='' ">
+            and "hospitalId" = #{hospitalId}
+        </if>
+        <if test="patientId!=null and patientId !='' ">
+            and "patientId" =#{patientId}
+        </if>
+        <if test="beginTime!=null and beginTime !='' ">
+            and to_date("settlementDate",'yyyy-mm-dd hh24:mi:ss')  &gt;= to_date(#{beginTime},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endTime!=null and endTime !='' ">
+            and to_date("settlementDate",'yyyy-mm-dd hh24:mi:ss')&lt;= to_date(#{endTime},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+    </select>
+    <!--获取处置已支付列表-->
+    <select id="getDisposalPaymented" parameterType="map" resultType="java.util.Map">
+        select * from v_getDisposalPaymented t where "paymentMethod" is not null
+        <if test="visitingId!=null and visitingId !='' ">
+            and "visitingId" =#{visitingId}
+        </if>
+        <if test="discrimination!=null and discrimination !='' ">
+            and "discrimination" =#{discrimination}
+        </if>
+        <if test="invoiceNumber!=null and invoiceNumber !='' ">
+            and "invoiceNumber" =#{invoiceNumber}
+        </if>
+        <if test="hospitalId!=null and hospitalId !='' ">
+            and "hospitalId" = #{hospitalId}
+        </if>
+    </select>
+    <!--根据发票号码查询该发票的处方是否发药或者已经作废-->
+    <select id="getDispensing" parameterType="java.util.Map" resultType="java.util.Map">
+        select 1 as fy from ms_cf01 where  (fybz=1 or  zfpb=1) and  fphm =#{invoiceNumber}
+    </select>
+    <!--根据发票号码查询该发票的处置是否执行或者已经作废-->
+    <select id="getImplement" parameterType="java.util.Map" resultType="java.util.Map">
+        select 1 as zx from ms_yj01 where  (zxpb=1 or   zfpb=1)  and fphm=#{invoiceNumber}
+    </select>
+    <!--查询处方金额-->
+    <select id="getPrescriptionAmount" parameterType="java.util.Map" resultType="Double">
+        select sum(zjje) as hjje from ms_mzxx where  fphm=#{invoiceNumber}
+    </select>
+    <!--写ms_zffp-->
+    <insert id="invalidInvoice1" parameterType="map"   databaseId="oracle">
+      insert into Ms_zffp(mzxh,jgid,fphm,czgh,mzlb,zfrq) select mzxh,jgid,fphm,czgh,mzlb,sysdate from ms_mzxx
+       where  fphm =#{invoiceNumber}
+    </insert>
+    <insert id="invalidInvoice1" parameterType="map"   databaseId="sqlserver">
+      insert into Ms_zffp(mzxh,jgid,fphm,czgh,mzlb,zfrq) select mzxh,jgid,fphm,czgh,mzlb,GETDATE() from ms_mzxx
+       where  fphm =#{invoiceNumber}
+    </insert>
+    <!--作废ms_mzxx-->
+    <update id="invalidInvoice2" parameterType="map">
+    UPDATE ms_mzxx
+    SET zfpb=1
+          where  fphm =#{invoiceNumber}
+
+    </update>
+    <!--作废cf01-->
+    <update id="invalidInvoice3" parameterType="map">
+    UPDATE ms_cf01
+    SET zfpb=1
+          where  fphm=#{invoiceNumber}
+
+    </update>
+    <!--作废yj01-->
+    <update id="invalidInvoice4" parameterType="map">
+    UPDATE ms_yj01
+    SET zfpb=1
+          where  fphm =#{invoiceNumber}
+
+    </update>
+
+    <!--查询getXtcs-->
+    <select id="getXtcs" parameterType="String" resultType="String">
+        select csz from gy_xtcs where csmc=#{csmc,jdbcType=VARCHAR} and     jgid=#{jgid}
+    </select>
+    <!--查询传入金额是否与处方号条件下的金额一样-->
+    <select id="settlementPrescription" parameterType="map" resultType="Double" databaseId="oracle">
+        select nvl(sum("paymentAmount"),0)  as hjje from v_getPrescriptionPayment where    "visitingId"=#{visitingId}
+        <if test="prescriptionNumber!=null and prescriptionNumber !='' ">
+            and  "prescriptionNumber"
+            in (${prescriptionNumber})
+        </if>
+    </select>
+    <select id="settlementPrescription" parameterType="map" resultType="Double" databaseId="sqlserver">
+        select ISNULL(sum("paymentAmount"),0)  as hjje from v_getPrescriptionPayment where    "visitingId"=#{visitingId}
+        <if test="prescriptionNumber!=null and prescriptionNumber !='' ">
+            and  "prescriptionNumber"
+            in (${prescriptionNumber})
+        </if>
+    </select>
+    <!--查询处方金额-->
+    <select id="settlementPrescription1" parameterType="map" resultType="Double">
+        select sum(b.hjje)as hjje from ms_cf01 a,ms_cf02 b where a.cfsb=b.cfsb and
+        a.cfsb in (${cfsb}) and a.fphm is null
+    </select>
+
+    <!--查询处置金额-->
+    <select id="settlementDisposal1" parameterType="map" resultType="Double">
+        select sum(b.hjje) as hjje from ms_yj01 a,ms_yj02 b where a.yjxh=b.yjxh and
+        a.yjxh in (${cfsb}) and a.fphm is null
+    </select>
+    <!--根据工号查询发票-->
+    <select id="settlementPrescription2" parameterType="String" resultType="java.util.Map"  databaseId="oracle">
+        SELECT lyrq,syhm,zzhm,YGDM
+        FROM (SELECT *
+        FROM MS_YGPJ
+        WHERE ZZHM &gt;= syhm
+        AND PJLX = 2
+        AND SYpb = 0
+        AND YGDM =#{czgh,jdbcType=VARCHAR}
+        ORDER BY LYRQ)
+        WHERE ROWNUM &gt;= 1
+    </select>
+    <!--根据工号查询发票-->
+    <select id="settlementPrescription2" parameterType="String" resultType="java.util.Map"  databaseId="sqlserver">
+        SELECT TOP 1 LYRQ,SYHM,ZZHM,YGDM
+        FROM MS_YGPJ
+        WHERE ZZHM &gt;= syhm
+        AND PJLX = 2
+        AND SYpb = 0
+        AND YGDM =#{czgh,jdbcType=VARCHAR}
+        ORDER BY LYRQ
+    </select>
+    <!--使用号码等于终止号码，说明是最后一张发票打上sypb-->
+    <update id="settlementPrescription3" parameterType="map">
+    UPDATE MS_YGPJ SET SYpb=1 WHERE LYRQ=#{LYRQ} AND YGDM = #{YGDM} AND PJLX = 2 and SYpb=0
+
+    </update>
+    <!--发票未使用发票号完加一-->
+    <update id="settlementPrescription4" parameterType="map">
+    UPDATE MS_YGPJ SET syhm=#{SYHM} WHERE LYRQ=#{LYRQ} AND YGDM =#{YGDM} AND PJLX = 2 and SYpb=0
+
+    </update>
+    <!--根据工号查询发票-->
+    <select id="settlementPrescription5" parameterType="map" resultType="java.util.Map">
+        select B.BRID , BRXM, BRXB, MZLB, B.SBXH AS GHGL, B.BRXZ
+       from ys_mz_jzls a, ms_ghmx b, ms_brda c
+      where a.ghxh = b.sbxh
+        and b.brid = c.brid
+        and a.jzxh = #{visitingId}
+    </select>
+    <!--写ms_mzxx-->
+
+    <insert id="settlementPrescription6" parameterType="map"  databaseId="oracle">
+      INSERT INTO ms_mzxx
+     (BRID,BRXB,BRXM,BRXZ,CZGH,DWXH,FPHM,GHGL,HBBZ,HBWC,JGID,JKJE,
+     MZGL,MZLB,MZXH,QTYS,SFFS,SFRQ,THPB,TRADE_NO,TZJE,
+     XJJE,ZFJE,ZFPB,ZHJE,ZJJE,ZPJE,PLATEFORMNUM)
+      values
+      (#{BRID,jdbcType=VARCHAR},#{BRXB,jdbcType=VARCHAR},#{BRXM,jdbcType=VARCHAR},#{BRXZ,jdbcType=VARCHAR},#{CZGH,jdbcType=VARCHAR},#{DWXH,jdbcType=VARCHAR},#{FPHM,jdbcType=VARCHAR},
+      #{GHGL,jdbcType=VARCHAR},#{HBBZ,jdbcType=VARCHAR},#{HBWC,jdbcType=VARCHAR},#{JGID,jdbcType=VARCHAR},#{JKJE,jdbcType=NUMERIC},#{MZGL,jdbcType=VARCHAR},#{MZLB,jdbcType=VARCHAR},#{MZXH,jdbcType=VARCHAR},
+      #{QTYS,jdbcType=VARCHAR},#{SFFS},sysdate,#{THPB,jdbcType=VARCHAR},#{TRADE_NO,jdbcType=VARCHAR},#{TZJE,jdbcType=NUMERIC},
+      #{XJJE,jdbcType=NUMERIC},#{ZFJE,jdbcType=NUMERIC},#{ZFPB,jdbcType=VARCHAR},#{ZHJE,jdbcType=NUMERIC},#{ZJJE,jdbcType=NUMERIC},#{ZPJE,jdbcType=NUMERIC},#{PLATEFORMNUM,jdbcType=VARCHAR})
+    </insert>
+    <!--7处方写MS_SFMX-->
+    <insert id="settlementPrescription7" parameterType="map">
+     INSERT INTO MS_SFMX (mzxh,sfxm,jgid,zjje,zfje,fphm)
+      select ${mzxh} as mzxh,b.fygb  as sfxm,${hospitalId}  as jgid,sum(b.hjje) as zjje,sum(b.hjje) as zfje,#{syhm,jdbcType=VARCHAR} as fphm
+             from ms_cf01 a, ms_cf02 b
+            where a.cfsb = b.cfsb
+            and  a.cfsb in (${cfsb} )
+              and a.fphm  =#{syhm}
+              and a.jzxh = #{visitingId}
+              group by b.fygb
+    </insert>
+    <!--7处置写MS_SFMX-->
+    <insert id="settlementDisposal7" parameterType="map">
+     INSERT INTO MS_SFMX (mzxh,sfxm,jgid,zjje,zfje,fphm)
+      select ${mzxh} as mzxh,b.fygb  as sfxm,${hospitalId}  as jgid,sum(b.hjje) as zjje,sum(b.hjje) as zfje,#{syhm,jdbcType=VARCHAR} as fphm
+             from ms_yj01 a, ms_yj02 b
+            where a.yjxh = b.yjxh
+            and  a.yjxh in (${cfsb} )
+              and a.fphm  =#{syhm}
+              and a.jzxh = #{visitingId}
+              group by b.fygb
+    </insert>
+    <!--7写ms_fkxx-->
+    <insert id="settlementPrescription8" parameterType="map"  databaseId="oracle">
+     INSERT INTO ms_fkxx (JLXH,JGID,MZXH,FKFS,FKJE) values(#{JLXH,jdbcType=VARCHAR},#{JGID,jdbcType=VARCHAR},#{MZXH,jdbcType=VARCHAR},#{FKFS,jdbcType=VARCHAR},#{FKJE,jdbcType=NUMERIC})
+    </insert>
+    <!--7写ms_fkxx-->
+    <insert id="settlementPrescription8" parameterType="map"  databaseId="sqlserver">
+     INSERT INTO ms_fkxx (JLXH,JGID,MZXH,FKFS,FKJE) values(#{JLXH,jdbcType=VARCHAR},#{JGID,jdbcType=VARCHAR},#{MZXH,jdbcType=VARCHAR},#{FKFS,jdbcType=VARCHAR},#{FKJE,jdbcType=NUMERIC})
+    </insert>
+    <!--修改ms_cf01一-->
+    <update id="settlementPrescription9" parameterType="map">
+     UPDATE ms_cf01 a set mzxh=#{mzxh} ,fphm=#{syhm},fyck=#{fyck}  where cfsb in (${cfsb} )  and jzxh = #{visitingId}
+     </update>
+    <!--修改ms_yj01-->
+    <update id="settlementDisposal9" parameterType="map">
+     UPDATE ms_yj01 set mzxh=#{mzxh} ,fphm=#{syhm} where yjxh in (${cfsb} )  and jzxh = #{visitingId}
+     </update>
+    <!--修改ms_cf02一-->
+    <update id="settlementPrescription13" parameterType="map">
+     UPDATE ms_cf02 a set fphm=#{syhm} where cfsb in (${cfsb} )
+     </update>
+    <!--修改ms_yj02-->
+    <update id="settlementDisposal13" parameterType="map">
+     UPDATE ms_yj02 set fphm=#{syhm} where yjxh in (${cfsb} )
+     </update>
+    <!--就诊历史列表-->
+    <select id="medicalRecordsList" parameterType="map" resultType="java.util.Map">
+        select * from v_medicalRecordsList t where 1=1
+        <if test="patientId!=null and patientId !='' ">
+            and "patientId" =#{patientId}
+        </if>
+        <if test="idCard!=null and idCard !='' ">
+            and "idCard" in (${idCard})
+        </if>
+        <if test="pendingPaid!=null and pendingPaid !='' ">
+            and "pendingPaid" = #{pendingPaid}
+        </if>
+
+    </select>
+    <select id="settlementPrescription10" parameterType="map" resultType="java.util.Map"  databaseId="oracle">
+       select 'yf' || a.yfsb as zxks,0 as sqid,0 as tjfl,
+         a.cfsb as cfsb
+        from ms_cf01 a
+        where  a.fphm is null
+        and  jzxh=#{visitingId} and a.zfpb=0
+        <if test="prescriptionNumber!=null and prescriptionNumber !='' ">
+            and 'cf' || a.cfsb in (${prescriptionNumber})
+        </if>
+        union all
+        select ''|| a.zxks as zxks,sqid,tjfl,
+         a.yjxh as cfsb
+        from ms_yj01 a
+        where  a.fphm is null    and a.zfpb=0      and  jzxh=#{visitingId}
+        <if test="prescriptionNumber!=null and prescriptionNumber !='' ">
+            and 'cz' || a.yjxh in (${prescriptionNumber})
+        </if>
+
+    </select>
+    <select id="settlementPrescription10_1" parameterType="map" resultType="java.util.Map"  databaseId="oracle">
+        select 'yf' || a.yfsb as zxks,0 as sqid,0 as tjfl,
+        a.cfsb as cfsb
+        from ms_cf01 a
+        where  a.fphm is null
+        and  jzxh=#{visitingId} and a.zfpb=0
+        <if test="prescriptionNumber!=null and prescriptionNumber !='' ">
+            and 'cf' || a.cfsb in (${prescriptionNumber})
+        </if>
+        union all
+        select ''|| a.zxks as zxks,sqid,tjfl,
+        a.yjxh as cfsb
+        from ms_yj01 a
+        where  a.fphm is null    and a.zfpb=0      and  jzxh=#{visitingId}
+        <if test="prescriptionNumber!=null and prescriptionNumber !='' ">
+            and 'cz' || a.yjxh in (${prescriptionNumber})
+        </if>
+
+    </select>
+    <select id="settlementPrescription10" parameterType="map" resultType="java.util.Map"  databaseId="sqlserver">
+
+             select
+                   cfsb as CFSB,0,0,
+                 'yf' + CAST (yfsb AS VARCHAR(100)) as ZXKS
+        from ms_cf01 b
+        where  b.fphm is null
+        and  jzxh=#{visitingId}
+        <if test="prescriptionNumber!=null and prescriptionNumber !='' ">
+            and 'cf' + CAST (b.cfsb AS VARCHAR(100)) in (${prescriptionNumber})
+        </if>
+        union all
+        select
+
+                yjxh as CFSB,sqid,tjfl,
+                 CAST (zxks AS VARCHAR(100)) as ZXKS
+        from ms_yj01 b
+        where  b.fphm is null
+        and  jzxh=#{visitingId}
+        <if test="prescriptionNumber!=null and prescriptionNumber !='' ">
+            and 'cz' + CAST (b.yjxh AS VARCHAR(100))  in  (${prescriptionNumber})
+        </if>
+
+
+    </select>
+    <select id="settlementPrescription11" parameterType="map" resultType="string"  databaseId="sqlserver">
+
+         	SELECT 	 stuff((select ',' + 'cf' +CAST (cfsb AS VARCHAR(100)) from ms_cf01 a where
+         	a.fphm is null and 'cf' + CAST (a.cfsb AS VARCHAR(100))  in  (${prescriptionNumber}) and 'yf' + CAST (a.yfsb AS VARCHAR(100))=#{zxks} for xml path('')),1,1,'')
+    </select>
+    <select id="settlementPrescription12" parameterType="map" resultType="string"  databaseId="sqlserver">
+
+         	SELECT 	 stuff((select ',' + 'cz' +CAST (yjxh AS VARCHAR(100)) from ms_yj01 a where
+         	 a.fphm is null and 'cz' + CAST (a.yjxh AS VARCHAR(100))  in  (${prescriptionNumber}) and  CAST (a.zxks AS VARCHAR(100))=#{zxks} for xml path('')),1,1,'')
+
+    </select>
+    <!--就诊历史详情-->
+    <select id="medicalRecordsDetails" parameterType="map" resultType="java.util.Map">
+        select * from v_medicalRecordsDetails t where 1=1
+        <if test="visitingId!=null and visitingId!='' ">
+            and "visitingId" =#{visitingId}
+        </if>
+        <if test="hospitalId!=null and hospitalId!='' ">
+            and "hospitalId" =#{hospitalId}
+        </if>
+
+    </select>
+    <!-- 查询支付方式-->
+    <select id="getZffs" parameterType="java.util.Map" resultType="java.util.Map" >
+        SELECT * FROM ONLINE_PAYMENT_METHOD where dsffkfs=#{paymentMethod} and zymz=1
+    </select>
+
+    <!--his交易记录查询-->
+    <select id="getHisPay" parameterType="map" resultType="java.util.Map">
+        select * from v_getHisPay t where 1=1
+        <if test="pt_type!=null and pt_type !='' ">
+            and "pt_type" =#{pt_type}
+        </if>
+        <if test="jgid!=null and jgid !='' ">
+            and "jgid" =#{jgid}
+        </if>
+        <if test="bus_type!=null and bus_type !='' ">
+            and "bus_type" =#{bus_type}
+        </if>
+        <if test="pay_type!=null and pay_type !='' ">
+            and "pay_type" =#{pay_type}
+        </if>
+        <if test="trade_type!=null and trade_type !='' ">
+            and "trade_type" =#{trade_type}
+        </if>
+        <if test="pay_from!=null and pay_from !='' ">
+            and "pay_from" =#{pay_from}
+        </if>
+        <if test="out_trade_no!=null and out_trade_no !='' ">
+            and "out_trade_no" =#{out_trade_no}
+        </if>
+        <if test="zfpb!=null and zfpb !='' ">
+            and "zfpb" =#{zfpb}
+        </if>
+        <if test="sfrq_begin!=null and sfrq_begin !='' ">
+            and to_date("sfrq",'yyyy-mm-dd hh24:mi:ss')  &gt;= to_date(#{sfrq_begin},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="sfrq_end!=null and sfrq_end !='' ">
+            and to_date("sfrq",'yyyy-mm-dd hh24:mi:ss')&lt;= to_date(#{sfrq_end},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+    </select>
+    <!--门诊病人处置检索-->
+    <select id="GetManagementInfo" parameterType="map" resultType="java.util.Map">
+        select distinct gy_ylsf0_.FYXH as "managementCode",--处置编码
+        gy_ylsf0_.FYMC as "managementName",--处置名称
+        gy_ylsf0_.FYDW as "company",--单位
+        gy_ylsf0_.BZJG as "price",--标志价格
+        sfxm.sfmc as "projectType",--项目类型
+        round(gy_ylmx2_.FYDJ, 2) as "unitPrice",--单价
+        gy_ylsf0_.FYGB as "costMerging",--费用归并
+        '' as "costDepartment"--费用科室
+        from GY_YLSF gy_ylsf0_, GY_FYBM gy_fybm1_, GY_YLMX gy_ylmx2_,gy_sfxm sfxm
+        where gy_ylsf0_.FYXH = gy_fybm1_.FYXH
+        and gy_ylsf0_.fygb=sfxm.sfxm
+        and gy_ylsf0_.FYXH = gy_ylmx2_.FYXH
+        and gy_ylmx2_.ZFPB = 0
+        and gy_ylsf0_.ZFPB = 0
+
+        <if test="searchContents!=null and searchContents!='' ">
+            and (gy_fybm1_.PYDM like '' || #{searchContents} || '%')
+        </if>
+        and gy_ylsf0_.MZSY = 1
+        order by gy_ylsf0_.FYXH ASC
+    </select>
+    <!--药 检索-->
+    <select id="getUseDrugs" parameterType="map" resultType="java.util.Map">
+        select jlbh as "recordNumber",--记录编号
+        ztbh as "stackNumber",--组套编号
+        sslb as "category",--所属类别
+        ygdm as "employeeCode",--员工代码
+        ksdm as "depCode",--科室代码
+        jgid as "hospitalId",--机构ID
+        ypxh as "drugNumber",--药品序号
+        ypmc as "drugName",--药品名字
+        ypgg as "drugSpecification",--药品规格
+        jldw as "doseUnit",--剂量单位
+        pydm as "pinyinCode" ,--拼音代码
+        ypdj as "prescriptionPrice",--药品单价
+        ypcd as "drugsPlaceCode",--药品产地
+        ycjl as "dose",--药品剂量
+        ypcdmc as "drugsPlaceName",--药品产地名称
+        yplx as "drugsType"--药品类型
+        from v_UseDrugs
+        where 1=1
+        <if test="drugName!=null and drugName!='' ">
+            and (ypmc like '%'||#{drugName}||'%' or pydm like '%'||upper(#{drugName})||'%')
+        </if>
+    </select>
+    <!--查询处方类型-->
+    <select id="settlementPrescription14" parameterType="map" resultType="java.util.Map">
+        select cflx,yfsb from ms_cf01 where  cfsb in (${cfsb})
+    </select>
+    <!--查询发药窗口-->
+    <select id="settlementPrescription15" parameterType="map" resultType="java.util.Map">
+
+        select * from (
+        select * from (
+        select a.ckbh,ckmc,c.yfmc,count(1) count from YF_CKBH a
+        left join ms_cf01 b on  a.yfsb=b.yfsb and a.ckbh=b.fyck and  b.fybz=0 and trunc(b.kfrq)=trunc(sysdate)
+        inner join yf_yflb c on a.yfsb=c.yfsb
+        where a.qypb=1
+        and a.yfsb=#{YFSB}
+        <if test="CFLX ==1  ">
+            and a.xyqx =1
+        </if>
+        <if test="CFLX ==2  ">
+            and a.zyqx=1
+        </if>
+        <if test="CFLX ==3  ">
+            and a.cyqx =1
+        </if>
+        group by a.ckbh,ckmc,c.yfmc
+        )
+        order by count
+        ) where rownum&lt;2
+    </select>
+    <!--修改ms_cf01一-->
+    <update id="updateJMBZ01" parameterType="map">
+        <if test="CFSB!=null and CFSB!='' ">
+            UPDATE ms_cf01 a set JMBZ=#{JMBZ} where cfsb= #{CFSB}
+        </if>
+        <if test="YJXH!=null and YJXH!='' ">
+            UPDATE ms_yj01 a set JMBZ=#{JMBZ}  where YJXH = #{YJXH}
+        </if>
+     </update>
+    <!--修改ms_cf02一-->
+    <update id="updateJMBZ02" parameterType="map">
+        <if test="CFSB!=null and CFSB!='' ">
+            UPDATE ms_cf02 a set JMLY1=#{JMLY1,jdbcType=VARCHAR},JMLY2=#{JMLY2,jdbcType=VARCHAR},GZJMLY=#{GZJMLY,jdbcType=VARCHAR},
+            ZFBLJM=#{ZFBLJM,jdbcType=VARCHAR},ZFBL=#{ZFBL,jdbcType=VARCHAR} where SBXH= #{SBXH} and hjje *#{ZFBL,jdbcType=VARCHAR}=#{JMJE,jdbcType=VARCHAR}
+        </if>
+        <if test="YJXH!=null and YJXH!='' ">
+            UPDATE ms_yj02 a set  JMLY1=#{JMLY1,jdbcType=VARCHAR},JMLY2=#{JMLY2,jdbcType=VARCHAR},GZJMLY=#{GZJMLY,jdbcType=VARCHAR},
+            ZFBLJM=#{ZFBLJM,jdbcType=VARCHAR},ZFBL=#{ZFBL,jdbcType=VARCHAR} where SBXH = #{SBXH} and hjje *#{ZFBL,jdbcType=VARCHAR}=#{JMJE,jdbcType=VARCHAR}
+        </if>
+    </update>
+    <insert id="saveJHZF_LOG" parameterType="map" databaseId="oracle">
+          INSERT INTO JHZF_LOG(
+                jlxh, trade_no, trade_id, trade_time, trade_type, his_fphm, his_djh, trade_user, charge_type, trade_amount, his_operate, pay_type)
+                values(
+               #{jlxh,jdbcType=VARCHAR},
+               #{trade_no,jdbcType=VARCHAR},
+               #{trade_id,jdbcType=VARCHAR},
+               sysdate,
+               #{trade_type,jdbcType=VARCHAR},
+               #{his_fphm,jdbcType=VARCHAR},
+               #{his_djh,jdbcType=VARCHAR},
+               #{trade_user,jdbcType=VARCHAR},
+               #{charge_type,jdbcType=VARCHAR},
+               #{trade_amount,jdbcType=VARCHAR},
+               #{his_operate,jdbcType=VARCHAR},
+               #{pay_type,jdbcType=VARCHAR}
+            )
+    </insert>
+    <insert id="saveMs_mzpj_nonprint" parameterType="map" databaseId="oracle">
+         INSERT INTO ms_mzpj_nonprint(sbxh,nonprint_date,czgh,pjlx,pjly,mz_pjhm, mzlb)
+	Values (#{sbxh},sysdate,#{czgh},#{pjlx},#{pjly},#{mz_pjhm},#{mzlb})
+    </insert>
+</mapper>

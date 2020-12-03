@@ -1,0 +1,105 @@
+server:
+  port: 8097
+  tomcat:
+    uri-encoding: UTF-8
+eureka:
+  client:
+    #    register-with-eureka: true
+    service-url:
+      defaultZone: http://admin:admin@127.0.0.1:9902/eureka
+    lease-renewal-interval-in-seconds: 2 # 设置心跳的时间间隔（默认是30秒）
+    lease-expiration-duration-in-seconds: 5 # 如果现在超过了5秒的间隔（默认是90秒）
+
+spring:
+  redis:
+    database: 0
+    timeout: 3000ms
+    host: 192.168.200.201
+    port: 6379
+    lettuce:
+      pool:
+        max-active: 100
+        max-idle: 8
+        min-idle: 0
+        max-wait: -1ms
+  cloud:
+    loadbalancer:
+      retry:
+        enabled: true
+  rabbitmq:
+    host: xbcs.f3322.net
+    port: 5672
+    username: bsoft
+    password: bsoft@123
+  application:
+    name: zuulgatewall
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+    messages:
+      encoding: UTF-8
+
+# 解决服务端超时
+feign:
+  hystrix:
+    enabled: false
+  client:
+    config:
+      default:  # 服务名，default表示所有服务
+        connectTimeout: 10000
+        readTimeout: 60000
+
+  # 数据压缩
+  compression:
+  request:
+  enabled: true
+  mime-types: # 可以被压缩的类型
+  - text/xml
+  - application/xml
+  - application/json
+  min-request-size: 2048 # 超过2048的字节进行压缩
+
+
+  # feign  日志输出  默认为none  在此配置后    还需要在 FeignClientConfig  配置
+  logging:
+  level:
+  com.bsoft.service: DEBUG
+
+
+zuul:
+  host:
+    socket-timeout-millis: 60000
+    connect-timeout-millis: 60000
+  routes:
+    apyment:
+      path: /**
+      serviceId: auth0
+  ignored-services: "*"  #，就可以进行代理的安全使用，但真实情况下，一般会有很多微服务，如果完全按照上面的配置方式会非常的麻烦，所有最加到的做法是可以采用一个通配符“*”的模式来统一完成
+
+
+
+
+ribbon:
+  ReadTimeout: 60000
+  ConnectTimeout: 60000
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeout-in-milliseconds: 3000
+
+
+
+#项目编号
+projectNumber : 1000010
+
+
+# 第三方接口的机构ID
+hospitalIds : "510112104,510112302,510112003"
+
+
+

@@ -1,0 +1,139 @@
+server:
+  port: 9311
+  tomcat:
+    uri-encoding: UTF-8
+
+logging:
+  level:
+    com.bsoft.mapper: debug
+
+
+
+spring:
+  rabbitmq:
+    host: xbcs.f3322.net
+    port: 5662
+    username: bsoft
+    password: bsoft@123
+  application:
+    name: 0-reportQuery
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  messages:
+    encoding: UTF-8
+  #  security:
+  #    user:
+  #      name: admin
+  #      password: admin
+  datasource:
+    lis:
+      borrowConnectionTimeout: 30
+      driver-class-name: oracle.jdbc.driver.OracleDriver
+      url: jdbc:oracle:thin:@172.77.116.17:1521:bslis
+      loginTimeout: 30
+      maintenanceInterval: 60
+      maxIdleTime: 60
+      maxLifetime: 20000
+      maxPoolSize: 25
+      minPoolSize: 3
+      password: bsoft
+      testQuery: select 1  from dual
+      type: oracle
+      username: bslis52
+    pacs:
+      borrowConnectionTimeout: 30
+      driver-class-name: oracle.jdbc.driver.OracleDriver
+      jdbc-url: jdbc:oracle:thin:@172.77.116.17:1521:bslis
+      loginTimeout: 30
+      maintenanceInterval: 60
+      maxIdleTime: 60
+      maxLifetime: 20000
+      maxPoolSize: 25
+      minPoolSize: 3
+      password: bsoft
+      testQuery: select 1
+      type: oracle
+      username: bslis52
+    business:
+      borrowConnectionTimeout: 30
+      driver-class-name: oracle.jdbc.driver.OracleDriver
+      url: jdbc:oracle:thin:@(DESCRIPTION = (ADDRESS = (PROTOCOL = TCP)(HOST = 172.30.51.45)(PORT = 1521))(LOAD_BALANCE = yes)(CONNECT_DATA = (SERVER = DEDICATED)(SERVICE_NAME = bsdzhis)))
+      loginTimeout: 30
+      maintenanceInterval: 60
+      maxIdleTime: 60
+      maxLifetime: 20000
+      maxPoolSize: 25
+      minPoolSize: 3
+      password: bsadmin
+      testQuery: select 1  from dual
+      type: oracle
+      username: bsadmin
+    identity:
+      borrowConnectionTimeout: 30
+      driver-class-name: oracle.jdbc.driver.OracleDriver
+      jdbc-url: jdbc:oracle:thin:@(DESCRIPTION = (ADDRESS = (PROTOCOL = TCP)(HOST = 172.30.51.45)(PORT = 1521))(LOAD_BALANCE = yes)(CONNECT_DATA = (SERVER = DEDICATED)(SERVICE_NAME = bsdzhis)))
+      loginTimeout: 30
+      maintenanceInterval: 60
+      maxIdleTime: 60
+      maxLifetime: 20000
+      maxPoolSize: 25
+      minPoolSize: 3
+      password: bsportal
+      testQuery: select 1  from dual
+      type: oracle
+      username: bsportal
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://admin:admin@127.0.0.1:9902/eureka
+  #    register-with-eureka: false
+  #    fetch-registry: false
+  instance:
+    instance-id: 0-reportQuery-1
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 2 # 设置心跳的时间间隔（默认是30秒）这样如果配置了“lease-expiration-duration-in-seconds”此选项，表示距离上一次发送心跳之后等待下一次发送心跳的间隔时间，如果超过了此间隔时间，则认为该微服务已经宕机了。
+    lease-expiration-duration-in-seconds: 5 # 如果现在超过了5秒的间隔（默认是90秒）
+info:
+  app.name: reportQuery
+  company.name: bsoft.com
+
+# 解决服务端超时
+feign:
+  hystrix:
+    enabled: false
+  client:
+    config:
+      default:  # 服务名，default表示所有服务
+        connectTimeout: 10000
+        readTimeout: 60000
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 5000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+hospitalId: 520000001
+hospitalName: 贵州省职工医院
+provinceId: 520000000000
+provinceName: 贵州省
+cityId: 520100000000
+cityName: 贵阳市
+districtId: 520111000000
+districtName: 花溪区
+#项目编号
+projectNumber : 1000004
+#系统内部机构id
+hospitalId-inCode: 1

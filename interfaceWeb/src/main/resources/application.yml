@@ -1,0 +1,55 @@
+server:
+  port: 5670
+  tomcat:
+    uri-encoding: UTF-8
+
+
+logging:
+  level:
+    com.bsoft.mapper: debug
+
+
+
+  application:
+    name: interfaceWeb
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  messages:
+    encoding: UTF-8
+#  security:
+#    user:
+#      name: admin
+#      password: admin
+spring:
+  redis:
+    database: 0
+    timeout: 3000ms
+    host: 127.0.0.1
+    port: 6379
+    lettuce:
+      pool:
+        max-active: 100
+        max-idle: 8
+        min-idle: 0
+        max-wait: -1ms
+  rabbitmq:
+    host: xbcs.f3322.net
+    port: 5672
+    username: bsoft
+    password: bsoft@123
+
+  data:
+    mongodb:
+      database: test
+      uri: mongodb://bsoft:bsoft123321@localhost:27017
+
+#需要记录支付信息的接口名
+billMethod:  getNumber,appointmentRegister,confirmRegister
+
+
+elasticsearch:
+  host: 127.0.0.1
+  port: 9200

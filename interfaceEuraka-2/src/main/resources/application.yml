@@ -1,0 +1,19 @@
+server:
+  port: 9902
+eureka:
+  instance:
+    hostname: eureka-2 # 定义 Eureka 实例所在的主机名称
+  server:
+    eviction-interval-timer-in-ms: 1000 #设置清理的间隔时间，而后这个时间使用的是毫秒单位（默认是60秒）
+    enable-self-preservation: false #设置为false表示关闭保护模式
+  client:
+    fetch-registry: false
+    register-with-eureka: false
+    service-url:
+      defaultZone: http://admin:admin@127.0.0.1:9902/eureka
+
+spring:
+  security:
+    user:
+      password: admin
+      name: admin

@@ -1,0 +1,1728 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bsoft.mapper.business.RegisterMapper">
+    <!-- 查询科室接口oracle-->
+    <select id="listDepartment" parameterType="java.util.Map" resultType="java.util.Map" databaseId="oracle">
+        SELECT * FROM v_listDepartment
+        <where>
+            <if test="hospitalId != null and hospitalId !=''  ">
+                and "hospitalId" =#{hospitalId}
+            </if>
+            <if test="depCode != null and depCode !=''  ">
+                and "depCode" =#{depCode}
+            </if>
+            <if test="depName != null and depName !=''  ">
+                and "depName" like '%'||#{depName}||'%'
+            </if>
+            <if test="hospitalName != null and hospitalName !=''  ">
+                and "hospitalName" like '%'||#{hospitalName}||'%'
+            </if>
+        </where>
+    </select>
+    <!-- 查询科室接口sqlserver-->
+    <select id="listDepartment" parameterType="java.util.Map" resultType="java.util.Map" databaseId="sqlserver">
+        SELECT * FROM v_listDepartment
+        <where>
+            <if test="hospitalId != null and hospitalId !=''  ">
+                and "hospitalId" =#{hospitalId}
+            </if>
+            <if test="depCode != null and depCode !=''  ">
+                and "depCode" =#{depCode}
+            </if>
+            <if test="depName != null and depName !=''  ">
+                and "depName" like '%'+#{depName}+'%'
+            </if>
+            <if test="hospitalName != null and hospitalName !=''  ">
+                and "hospitalName" like '%'+#{hospitalName}+'%'
+            </if>
+        </where>
+    </select>
+    <!-- 查询机构接口-->
+    <select id="listOrg" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT * FROM v_listorg
+        <where>
+            <if test="hospitalId != null and hospitalId !=''  ">
+                and "hospitalId" =#{hospitalId}
+            </if>
+            <if test="hospitalName != null and hospitalName !=''  ">
+                and "hospitalName" like '%'||#{hospitalName}|| '%'
+            </if>
+        </where>
+    </select>
+    <!-- 获取患者信息接口-->
+    <select id="patientIsMatch" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT * FROM v_patientIsMatch
+        <where>
+            <if test="idCard != null and idCard !=''  ">
+                and "idCard" =#{idCard}
+            </if>
+            <if test="patientId != null and patientId !=''  ">
+                and "patientId" =#{patientId}
+            </if>
+            <if test="patientName != null and patientName !=''  ">
+                and "patientName" =#{patientName}
+            </if>
+            <if test="patcardNo != null and patcardNo !=''  ">
+                and "patcardNo" =#{patcardNo}
+            </if>
+            <if test="outpatientNo != null and outpatientNo !=''  ">
+                and "outpatientNo" =#{outpatientNo}
+            </if>
+            <if test="EID != null and EID !=''  ">
+                and "EID" =#{EID}
+            </if>
+        </where>
+        order by "patientId" desc
+    </select>
+    <!-- 查询医生接口oracle -->
+    <select id="listDoctor" parameterType="java.util.Map" resultType="java.util.Map" databaseId="oracle">
+        SELECT * FROM v_listdoctor
+        <where>
+            <if test="depCode != null and depCode !=''  ">
+                and "depCode" =#{depCode}
+            </if>
+            <if test="doctorCode != null and doctorCode !=''  ">
+                and "doctorCode" =#{doctorCode}
+            </if>
+            <if test="hospitalId != null and hospitalId !=''  ">
+                and "hospitalId" =#{hospitalId}
+            </if>
+            <if test="doctorName != null and doctorName !=''  ">
+                and "doctorName" like '%'||#{doctorName}|| '%'
+            </if>
+            <if test="depName != null and depName !=''  ">
+                and "depName" like '%'||#{depName}|| '%'
+            </if>
+            <if test="hospitalName != null and hospitalName !=''  ">
+                and "hospitalName" like '%'||#{hospitalName}|| '%'
+            </if>
+        </where>
+
+    </select>
+
+    <!-- 查询医生接口sqlserver-->
+    <select id="listDoctor" parameterType="java.util.Map" resultType="java.util.Map" databaseId="sqlserver">
+        SELECT * FROM v_listdoctor
+        <where>
+            <if test="depCode != null and depCode !=''  ">
+                and "depCode" =#{depCode}
+            </if>
+            <if test="doctorCode != null and doctorCode !=''  ">
+                and "doctorCode" =#{doctorCode}
+            </if>
+            <if test="hospitalId != null and hospitalId !=''  ">
+                and "hospitalId" =#{hospitalId}
+            </if>
+            <if test="doctorName != null and doctorName !=''  ">
+                and "doctorName" like '%'+#{doctorName}+'%'
+            </if>
+            <if test="depName != null and depName !=''  ">
+                and "depName" like '%'+#{depName}+'%'
+            </if>
+            <if test="hospitalName != null and hospitalName !=''  ">
+                and "hospitalName" like '%'+#{hospitalName}+'%'
+            </if>
+        </where>
+
+    </select>
+    <!-- 查询排班医生和号源查询接口-->
+    <select id="queryDeptAndDoctor" parameterType="java.util.Map" resultType="java.util.Map" databaseId="oracle">
+        select * from v_addWorkPbInfo t where "dataSources"=#{dataSources}
+            <if test="depCode != null and depCode !=''  ">
+                and "depCode" =#{depCode}
+            </if>
+            <if test="doctorCode != null and doctorCode !=''  ">
+                and "doctorCode" =#{doctorCode}
+            </if>
+            <if test="jgid != null and jgid !=''  ">
+                and "hospitalId" =#{jgid}
+            </if>
+            <if test="isExpert != null and isExpert !=''  ">
+                and "isExpert" =#{isExpert}
+            </if>
+            <if test="depName != null and depName !=''  ">
+                and "depName" like '%'||#{depName}|| '%'
+            </if>
+            <if test="hospitalName != null and hospitalName !=''  ">
+                and "hospitalName" like '%'||#{hospitalName}|| '%'
+            </if>
+            <if test="registerBeginDate != null and registerBeginDate !=''  ">
+                and to_date(t."registerDate",'yyyy-mm-dd') &gt;= to_date(#{registerBeginDate},'yyyy-mm-dd')
+            </if>
+            <if test="registerEndDate != null and registerEndDate !=''  ">
+                and to_date(t."registerDate",'yyyy-mm-dd') &lt;= to_date(#{registerEndDate},'yyyy-mm-dd')
+            </if>
+            <if test="workId != null and workId !=''  ">
+                and "workId" =#{workId}
+            </if>
+
+
+    </select>
+
+    <!-- 查询排班医生和号源查询接口-->
+    <select id="queryDeptAndDoctor" parameterType="java.util.Map" resultType="java.util.Map" databaseId="sqlserver">
+        select * from v_addWorkPbInfo t where  "dataSources"=#{dataSources}
+
+            <if test="depCode != null and depCode !=''  ">
+            and "depCode" =#{depCode}
+        </if>
+            <if test="doctorCode != null and doctorCode !=''  ">
+                and "doctorCode" =#{doctorCode}
+            </if>
+            <if test="jgid != null and jgid !=''  ">
+                and "hospitalId" =#{jgid}
+            </if>
+            <if test="isExpert != null and isExpert !=''  ">
+                and "isExpert" =#{isExpert}
+            </if>
+            <if test="depName != null and depName !=''  ">
+                and "depName" like '%'||#{depName}|| '%'
+            </if>
+            <if test="hospitalName != null and hospitalName !=''  ">
+                and "hospitalName" like '%'||#{hospitalName}|| '%'
+            </if>
+            <if test="registerBeginDate != null and registerBeginDate !=''and registerEndDate != null and registerEndDate !=''  ">
+                and t."registerDate" between convert(varchar(10),#{registerBeginDate},120) and
+                convert(varchar(10),#{registerEndDate},120)
+            </if>
+
+            <if test="workId != null and workId !=''  ">
+                and "workId" =#{workId}
+            </if>
+
+
+
+    </select>
+    <!--锁定号源oracle-->
+    <update id="lockNumber" parameterType="map" databaseId="oracle">
+     UPDATE ms_yspb
+         SET yyrs = yyrs + decode(TRUNC(to_date(#{registrationDate},'yyyy-mm-dd')),TRUNC(sysdate),0,1),ygrs=ygrs+1
+       WHERE gzrq = to_date(#{registrationDate},'yyyy-mm-dd')
+         AND ksdm = #{depCode}
+         AND ysdm = #{doctorCode}
+         AND zblb = #{timeInterval}
+
+    </update>
+    <!--锁定号源sqlserver-->
+    <update id="lockNumber" parameterType="map" databaseId="sqlserver">
+     UPDATE ms_yspb
+         SET yyrs = yyrs + 1
+       WHERE gzrq =   convert(varchar(10),#{registrationDate},120)
+         AND ksdm = #{depCode}
+         AND ysdm = #{doctorCode}
+         AND zblb = #{timeInterval}
+
+    </update>
+    <!--解锁号源 oracle -->
+    <update id="unlockNumber" parameterType="map" databaseId="oracle">
+     UPDATE ms_yspb
+         SET yyrs = yyrs - 1
+       WHERE gzrq = to_date(#{registrationDate},'yyyy-mm-dd')
+         AND ksdm = #{depCode}
+         AND ysdm = #{doctorCode}
+         AND zblb = #{timeInterval}
+         AND yyrs > 0
+    </update>
+    <!--解锁号源 sqlserver -->
+    <update id="unlockNumber" parameterType="map" databaseId="sqlserver">
+     UPDATE ms_yspb
+         SET yyrs = yyrs - 1
+       WHERE gzrq = convert(varchar(10),#{registrationDate},120)
+         AND ksdm = #{depCode}
+         AND ysdm = #{doctorCode}
+         AND zblb = #{timeInterval}
+         AND yyrs > 0
+    </update>
+    <!--查询是否已经预约oracle-->
+    <select id="queryAppointment" parameterType="java.util.Map" resultType="java.lang.Integer" databaseId="oracle">
+        SELECT count(*)
+        as n_count
+        FROM ms_ghmx
+        WHERE thbz = 0
+            AND  trunc(ghsj) = to_date(#{registrationDate}, 'yyyy-MM-DD')
+            AND brid = #{patientId}
+            AND ksdm=#{depCode}
+            AND JZHM not like 'Auto%'
+
+    </select>
+
+    <!--查询是否已经预约sqlserver-->
+    <select id="queryAppointment" parameterType="java.util.Map" resultType="java.lang.Integer" databaseId="sqlserver">
+        SELECT count(*)
+        as n_count
+        FROM ms_yygh
+        WHERE GHBZ = 0
+            AND  ghrq =  convert(varchar(10),#{registrationDate},120)
+            AND brid = #{patientId}
+
+    </select>
+    <!--预约oracle-->
+    <update id="appointment" parameterType="map" databaseId="oracle">
+          INSERT INTO ms_yygh
+        (yyxh, -- 预约序号
+         jgid, -- 机构代码
+         yymm, -- 预约密码
+         brid, -- 病人ID
+         ghrq, -- 挂号日期
+         ksdm, -- 科室代码
+         zblb, -- 值班类别
+         ysdm, -- 医生代码
+         yylb, -- 预约类别
+         ghbz, -- 挂号标志 | 0.预约 1.履约 2.失约 3.收费 4.退约
+         yyrq, -- 预约日期
+         jzxh, -- 就诊序号
+         sbxh, -- 识别序号
+         zcid, -- 注册ID
+         djgh--, -- 登记工号
+         --hyxh-- 号源序号
+         )
+        SELECT #{orderId},
+               #{hospitalId},
+               '123456',
+               #{patientId},
+               to_date(#{registrationDate},'yyyy-mm-dd'),
+               #{depCode},
+               #{timeInterval},
+               #{doctorCode},
+               1,
+               '0',
+              to_date(#{newDate},'yyyy-mm-dd HH24:MI:SS'),
+               0,
+               0,
+               0,
+               #{czgh}--,
+           --    NULL
+          FROM DUAL
+    </update>
+    <!--预约sqlserver-->
+    <update id="appointment" parameterType="map" databaseId="sqlserver">
+          INSERT INTO ms_yygh
+        (yyxh, -- 预约序号
+         jgid, -- 机构代码
+         yymm, -- 预约密码
+         brid, -- 病人ID
+         ghrq, -- 挂号日期
+         ksdm, -- 科室代码
+         zblb, -- 值班类别
+         ysdm, -- 医生代码
+         yylb, -- 预约类别
+         ghbz, -- 挂号标志 | 0.预约 1.履约 2.失约 3.收费 4.退约
+         yyrq, -- 预约日期
+         jzxh, -- 就诊序号
+         sbxh, -- 识别序号
+         zcid, -- 注册ID
+         djgh--, -- 登记工号
+         --hyxh-- 号源序号
+         )
+        SELECT #{orderId},
+               #{hospitalId},
+               '123456',
+               #{patientId},
+               convert(varchar(10),#{registrationDate},120),
+               #{depCode},
+               #{timeInterval},
+               #{doctorCode},
+               1,
+               '0',
+              convert(varchar(100),#{newDate},120),
+               0,
+               0,
+               0,
+               #{czgh}--,
+           --    NULL
+
+    </update>
+    <!--保存预约信息-->
+    <update id="saveReservation" parameterType="map">
+        insert into ghyy_yyxx(YYXH,JGID,BRID,BRXM,SFZH,HYXH,YYZT,YYSJ,YYR,GHSJ,GHR,FKBZ,BRXB,YYTJ) values
+        (#{orderId},#{hospitalId},#{patientId},#{patientName},#{idCard,jdbcType=VARCHAR},null,1,to_date(#{registrationDate},'yyyy-mm-dd'),#{czgh},#{newDate},#{czgh},1,#{sexCode,jdbcType=VARCHAR},5)
+    </update>
+    <!--获取系统参数-->
+    <select id="queryXtcs" parameterType="java.lang.String" resultType="java.lang.String">
+         select  csz  from gy_xtcs t  where csmc =#{csmc} and jgid=#{jgid}
+    </select>
+    <!--判断是否已经取号-->
+    <select id="queryGetNumber" parameterType="java.util.Map" resultType="java.lang.Integer">
+         select count(*)
+        as n_count
+        from ms_ghmx t
+       where sbxh = (select sbxh from ms_yygh   where yyxh = #{orderId})
+    </select>
+    <!--判断是否预约过该排班医生oracle-->
+    <select id="queryOrdered" parameterType="java.util.Map" resultType="java.lang.Integer" databaseId="oracle">
+            SELECT count(*)
+        as n_count
+        FROM ms_yygh
+       WHERE GHBZ = 0
+         AND jgid = ${hospitalId}
+         AND  ghrq =to_date(#{registrationDate}, 'yyyy-MM-DD')
+         AND YSDM = ${doctorCode}
+         AND KSDM = ${depCode}
+         AND ZBLB = ${timeInterval}
+         AND brid = #{patientId,jdbcType=VARCHAR}
+    </select>
+
+    <!--判断是否预约过该排班医生sqlserver-->
+    <select id="queryOrdered" parameterType="java.util.Map" resultType="java.lang.Integer" databaseId="sqlserver">
+            SELECT count(*)
+        as n_count
+        FROM ms_yygh
+       WHERE GHBZ = 0
+         AND jgid = #{hospitalId}
+         AND  ghrq = convert(varchar(10),#{registrationDate}, 120)
+         AND YSDM = #{doctorCode}
+         AND KSDM = #{depCode}
+         AND ZBLB = #{timeInterval}
+         AND brid = #{patientId}
+    </select>
+    <!--根据工号查询票据号-->
+    <select id="settlementPrescription2" parameterType="map" resultType="java.util.Map" databaseId="oracle">
+        SELECT lyrq,syhm,zzhm,YGDM,PJLX
+        FROM (SELECT *
+        FROM MS_YGPJ
+        WHERE ZZHM &gt;= syhm
+        AND PJLX = #{pjlx}
+        AND SYpb = 0
+        AND YGDM =#{czgh,jdbcType=VARCHAR}
+        ORDER BY LYRQ)
+        WHERE ROWNUM &gt;= 1
+    </select>
+
+    <!--根据工号查询票据号-->
+    <select id="settlementPrescription2" parameterType="map" resultType="java.util.Map" databaseId="sqlserver">
+        SELECT top 1 LYRQ,SYHM,ZZHM,YGDM,PJLX
+        FROM (SELECT TOP 100 PERCENT *
+        FROM MS_YGPJ
+        WHERE ZZHM &gt;= syhm
+        AND PJLX = #{pjlx}
+        AND SYpb = 0
+        AND YGDM =#{czgh,jdbcType=VARCHAR}
+        ORDER BY LYRQ) a
+
+    </select>
+    <!--使用号码等于终止号码，说明是最后一张票据类型打上sypb-->
+    <update id="settlementPrescription3" parameterType="map">
+    UPDATE MS_YGPJ SET SYpb=1 WHERE LYRQ=#{LYRQ} AND YGDM = #{YGDM} AND PJLX = #{PJLX} and SYpb=0
+    </update>
+    <!--发票未使用票据类型号完加一-->
+    <update id="settlementPrescription4" parameterType="map">
+    UPDATE MS_YGPJ SET syhm=#{SYHM} WHERE LYRQ=#{LYRQ} AND YGDM =#{YGDM} AND PJLX = #{PJLX} and SYpb=0
+
+    </update>
+    <!--保存挂号明细和付款方式oracle-->
+    <update id="saveGhmx" parameterType="map" databaseId="oracle">
+            INSERT INTO ms_ghmx
+        (sbxh,
+         jgid,
+         brid,
+         brxz,
+         ghsj,
+         ghlb,
+         ksdm,
+         ysdm,
+         jzys,
+         jzxh,
+         ghcs,
+         ghje,
+         zlje,
+         zjfy,
+         blje,
+         xjje,
+         zpje,
+         zhje,
+         hbwc,
+         qtys,
+         zhlb,
+         jzjs,
+         zdjg,
+         thbz,
+         czgh,
+         jzrq,
+         hzrq,
+         czpb,
+         jzhm,
+         mzlb,
+         yybz,
+         yspb,
+         dzsb,
+         sffs,
+         jzzt,
+         sfsj,
+         zblb,
+         WX_ZFJE,
+         ZFB_ZFJE,
+         POSJE,
+         WXBZ,
+         ZFBBZ,
+         TRADE_NO,
+         TRAN_ID,
+         TRAN_DATE
+         )
+        SELECT #{sbxh,jdbcType=VARCHAR},
+               #{hospitalId},
+               ${patientId},
+               (select brxz from ms_brda where brid =  #{patientId}),
+
+              to_date(#{qssj}, 'yyyy-MM-dd HH24:mi:ss'),
+               (select ghlb from ms_ghks where ksdm = #{depCode,jdbcType=VARCHAR}),
+               #{depCode,jdbcType=VARCHAR},
+               #{doctorCode},
+               '',
+               #{jzxh},
+              1,
+               #{GHJE} ,
+              #{ZLJE} ,
+                #{ZJFY} ,
+                #{BLJE} ,
+               0,
+               0,
+               0,
+               0,
+               0,
+               0,
+               0,
+               null,
+               0,
+               #{czgh},
+               null,
+               null,
+               case
+                 when (select count(1)
+                         from ys_mz_jzls
+                        where ysdm = #{doctorCode}
+                          and brbh =  #{patientId}
+                          and jgid = 1) > 0 then
+                  0
+                 else
+                  1
+               end,
+               #{jzhm},
+              (select MZLB from ms_ghks where ksdm = #{depCode,jdbcType=VARCHAR}),
+               decode(trunc(to_date(#{registrationDate}, 'yyyy-MM-dd HH24:mi:ss')),trunc(sysdate),0,1),
+               0,
+               0,
+               0,
+               0,
+               sysdate,
+                #{timeInterval,jdbcType=VARCHAR} ,
+                #{WX_ZFJE},
+                #{ZFB_ZFJE},
+                #{POSJE},
+                #{WXBZ},
+                #{ZFBBZ},
+                #{TRADE_NO},
+                #{TRAN_ID},
+                sysdate
+          FROM DUAL
+
+    </update>
+    <!--保存挂号明细和付款方式sqlserver-->
+    <update id="saveGhmx" parameterType="map" databaseId="sqlserver">
+            INSERT INTO ms_ghmx
+        (sbxh,
+         jgid,
+         brid,
+         brxz,
+         ghsj,
+         ghlb,
+         ksdm,
+         ysdm,
+         jzys,
+         jzxh,
+         ghcs,
+         ghje,
+         zlje,
+         zjfy,
+         blje,
+         xjje,
+         zpje,
+         zhje,
+         hbwc,
+         qtys,
+         zhlb,
+         jzjs,
+         zdjg,
+         thbz,
+         czgh,
+         jzrq,
+         hzrq,
+         czpb,
+         jzhm,
+         mzlb,
+         yybz,
+         yspb,
+         dzsb,
+         sffs,
+         jzzt,
+         sfsj,
+         zblb,
+         WX_ZFJE,
+         ZFB_ZFJE,
+         QTFKJE,
+         WXBZ,
+         ZFBBZ,
+         TRADE_NO,
+         TRAN_ID
+
+         )
+        SELECT #{sbxh,jdbcType=VARCHAR},
+               #{hospitalId},
+               ${patientId},
+               (select brxz from ms_brda where brid =  #{patientId}),
+              convert(varchar(100),#{registrationDate}, 120),
+
+               '1',
+               #{depCode,jdbcType=VARCHAR},
+               #{doctorCode},
+               '',
+              #{jzxh},
+              1,
+                  ( SELECT
+             "registerMoney"
+        FROM v_addWorkPbInfo
+       WHERE "workId" =#{workId}  and "dataSources"=#{dataSources}) ,
+             ( SELECT
+             "consultationFee"
+        FROM v_addWorkPbInfo
+       WHERE "workId" =#{workId}  and "dataSources"=#{dataSources}),
+               ( SELECT
+             "expertCost"
+        FROM v_addWorkPbInfo
+       WHERE "workId" =#{workId}  and "dataSources"=#{dataSources}),
+               0,
+              ( SELECT
+             "totalMoney"
+        FROM v_addWorkPbInfo
+       WHERE "workId" =#{workId}  and "dataSources"=#{dataSources}),
+               0,
+               0,
+               0,
+               0,
+               0,
+               0,
+               null,
+               0,
+               #{czgh},
+               null,
+               null,
+               case
+                 when (select count(1)
+                         from ys_mz_jzls
+                        where ysdm = #{doctorCode}
+                          and brbh =  #{patientId}
+                          and jgid = 1) > 0 then
+                  0
+                 else
+                  1
+               end,
+               #{jzhm},
+               4,
+               1,
+               0,
+               0,
+               0,
+               0,
+               GETDATE(),
+                #{timeInterval,jdbcType=VARCHAR},
+                #{WX_ZFJE},
+                #{ZFB_ZFJE},
+                #{QTFKJE},
+                #{WXBZ},
+                #{ZFBBZ},
+                #{TRADE_NO},
+                #{TRAN_ID}
+
+
+    </update>
+    <!--保存付款信息oracle-->
+    <update id="saveFkxx" parameterType="map" databaseId="oracle">
+                    insert into ms_gh_fkxx
+        (jlxh, sbxh, fkfs, fkje,fkhm)
+        select #{jlxh,jdbcType=VARCHAR},
+               #{sbxh,jdbcType=VARCHAR},
+               #{fkfs,jdbcType=VARCHAR},
+               #{paymentAmount,jdbcType=VARCHAR},
+               #{wcoerderId,jdbcType=VARCHAR}
+          FROM DUAL
+    </update>
+    <!--保存付款信息sqlserver-->
+    <update id="saveFkxx" parameterType="map" databaseId="sqlserver">
+                    insert into ms_gh_fkxx
+        (jlxh, sbxh, fkfs, fkje,fkhm)
+        select #{jlxh,jdbcType=VARCHAR},
+               #{sbxh,jdbcType=VARCHAR},
+               #{fkfs,jdbcType=VARCHAR},
+               ( SELECT
+             "totalMoney"
+        FROM v_addWorkPbInfo
+       WHERE "workId" =#{workId,jdbcType=VARCHAR}  and "dataSources"=#{dataSources}),#{wcoerderId,jdbcType=VARCHAR}
+
+    </update>
+    <!--更新预约信息oracle-->
+    <update id="updateYygh" parameterType="map" databaseId="oracle">
+       update ms_yygh
+         set sbxh = #{sbxh},
+             jzxh = #{jzxh},
+             ghbz = 3
+       where yyxh = #{orderId}
+    </update>
+
+    <!--更新预约信息sqlserver-->
+    <update id="updateYygh" parameterType="map" databaseId="sqlserver">
+       update ms_yygh
+         set sbxh = #{sbxh},
+             jzxh = #{jzxh},
+             ghbz = 3
+       where yyxh = #{orderId}
+    </update>
+    <!--查询是否已经就诊-->
+    <select id="querySfjz" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(*)
+        as n_count
+        from ys_mz_jzls
+        <where>
+            <if test="seqCode != null and seqCode !=''  ">
+                and ghxh = #{seqCode}
+            </if>
+        </where>
+
+    </select>
+    <!--查询是否已经退费-->
+    <select id="querySftf" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(*)
+        as n_count
+        from ms_ghmx
+       where sbxh =  #{seqCode}
+         and thbz = 1
+    </select>
+    <!--查询是否已经取消预约-->
+    <select id="querySfqxyy" parameterType="java.util.Map" resultType="java.lang.Integer">
+         select count(*)
+        as n_count
+        from ms_yygh
+       where sbxh = #{seqCode}
+         and ghbz = 4
+    </select>
+    <!--修改退费标志-->
+    <update id="refund">
+      UPDATE ms_ghmx SET thbz = 1 WHERE sbxh = #{seqCode}
+    </update>
+    <!--保存退费明细oracle-->
+    <update id="saveThmx" parameterType="map" databaseId="oracle">
+            INSERT INTO ms_thmx
+        (sbxh, -- 识别序号
+         jgid, -- 机构ID
+         czgh, -- 操作工号
+         jzrq, -- 结帐日期
+         mzlb, -- 门诊类别
+         hzrq, -- 汇总日期
+         thrq) -- 退号日期
+        SELECT #{seqCode},
+                #{hospitalId},
+               #{czgh},
+               null,
+               4,
+               NULL,
+               SYSDATE
+          FROM DUAL
+    </update>
+
+    <!--保存退费明细-->
+    <update id="saveThmx" parameterType="map" databaseId="sqlserver">
+            INSERT INTO ms_thmx
+        (sbxh, -- 识别序号
+         jgid, -- 机构ID
+         czgh, -- 操作工号
+         jzrq, -- 结帐日期
+         mzlb, -- 门诊类别
+         hzrq, -- 汇总日期
+         thrq) -- 退号日期
+        SELECT #{seqCode},
+               #{hospitalId},
+               #{czgh},
+               null,
+               4,
+               NULL,
+               GETDATE()
+
+    </update>
+    <!--修改预约标志-->
+    <update id="withdrawNumber">
+     UPDATE ms_yygh SET ghbz = 4 WHERE sbxh =#{seqCode}
+    </update>
+    <!--修改号源信息（退号）oracle-->
+    <update id="editNumber" databaseId="oracle">
+     UPDATE ms_yspb
+         SET yyrs = yyrs - 1,ygrs=ygrs-1
+     WHERE gzrq = to_date(#{registrationDate},'yyyy-mm-dd')
+         AND ksdm = #{depCode}
+         AND ysdm = #{doctorCode}
+         AND zblb = #{timeInterval}
+    </update>
+    <!--修改号源信息（退号）sqlserver-->
+    <update id="editNumber" databaseId="sqlserver">
+     UPDATE ms_yspb
+         SET yyrs = yyrs - 1
+     WHERE gzrq = convert (varchar (10),#{registrationDate},120)
+         AND ksdm = #{depCode}
+         AND ysdm = #{doctorCode}
+         AND zblb = #{timeInterval}
+    </update>
+    <!--查询病人档案，返回病人ID-->
+    <select id="queryBrda" parameterType="map" resultType="java.lang.String">
+        select max(brid)
+        as s_brid
+        from ms_brda
+        WHERE SFZH = #{idCard}
+        order by jdsj desc
+    </select>
+    <!--查询病人档案，返回病人MZHM-->
+    <select id="queryBrdaMzhm" parameterType="map" resultType="java.lang.String">
+        select mzhm
+        as s_brid
+        from ms_brda
+        WHERE brid = #{patientId}
+    </select>
+    <!--写入退号明细(取消预约)-->
+    <update id="cancelRegister" databaseId="oracle">
+              INSERT INTO ms_thmx
+        (sbxh, -- 识别序号
+         jgid, -- 机构ID
+         czgh, -- 操作工号
+         jzrq, -- 结帐日期
+         mzlb, -- 门诊类别
+         hzrq, -- 汇总日期
+         thrq) -- 退号日期
+        SELECT #{seqCode},
+               #{hospitalId},
+               #{czgh},
+               null,
+               (select t.mzlb from ms_ghmx t where t.sbxh=#{seqCode}),
+               NULL,
+               SYSDATE
+          FROM DUAL
+    </update>
+
+    <!--写入退号明细(取消预约)-->
+    <update id="cancelRegister" databaseId="sqlserver">
+              INSERT INTO ms_thmx
+        (sbxh, -- 识别序号
+         jgid, -- 机构ID
+         czgh, -- 操作工号
+         jzrq, -- 结帐日期
+         mzlb, -- 门诊类别
+         hzrq, -- 汇总日期
+         thrq) -- 退号日期
+        SELECT #{seqCode},
+               #{hospitalId},
+               #{czgh},
+               null,
+               #{timeInterval},
+               NULL,
+               GETDATE()
+
+    </update>
+    <!-- 查询排班医生和号源查询接口-->
+    <select id="queryHyxx" parameterType="java.util.Map" resultType="java.util.Map">
+        select * from v_addWorkPbInfo t
+         where    "workId" =#{workId}  and "dataSources"=#{dataSources}
+    </select>
+
+
+    <!--病人建档，保存病人档案信息oracle-->
+    <update id="PatientFiling" databaseId="oracle">
+        INSERT INTO ms_brda
+      (BRID,
+       MZHM,
+       BRXM,
+       SFZH,
+       ybkh,
+       BRXZ,
+       BRXB,
+       CSNY,
+       MZDM,
+       LXDH,
+       JTDH,
+       JDJG,
+       JDSJ,
+       JDR,
+       XGSJ,
+       ZXBZ,
+       xzz_qtdz,
+       gmyw,
+       jzkh
+       )
+    VALUES
+      (#{patientId,jdbcType=VARCHAR},
+       #{mzhm,jdbcType=VARCHAR},
+       #{patientName,jdbcType=VARCHAR},
+       #{idCard,jdbcType=VARCHAR},
+       #{medicareId,jdbcType=VARCHAR},
+        (select  csz  from gy_xtcs t  where csmc ='MRXZ' and jgid=0),
+       #{sexCode,jdbcType=VARCHAR},
+       to_date(#{birthday,jdbcType=VARCHAR}, 'yyyy-mm-dd'),
+       #{national,jdbcType=VARCHAR},
+       #{phoneNo,jdbcType=VARCHAR},
+       #{phoneNo,jdbcType=VARCHAR},
+       #{JDJG,jdbcType=VARCHAR},
+       sysdate,
+       #{czgh,jdbcType=VARCHAR},
+       sysdate,
+       0,
+       #{address,jdbcType=VARCHAR},
+       #{allergyDrugs,jdbcType=VARCHAR},
+       #{patcardNo,jdbcType=VARCHAR}
+        )
+    </update>
+    <!--病人建档，保存病人档案信息oracle-->
+    <update id="PatientFiling1" databaseId="oracle">
+        INSERT INTO portal.gy_brda
+      (BRID,
+       MZHM,
+       BRXM,
+       SFZH,
+       ybkh,
+       BRXZ,
+       BRXB,
+       CSNY,
+       MZDM,
+       LXDH,
+       JTDH,
+       JDJG,
+       JDSJ,
+       JDR,
+       XGSJ,
+       ZXBZ,
+       xzz_qtdz,
+       gmyw,
+       jzkh,
+       healthid
+       )
+    VALUES
+      (#{patientId,jdbcType=VARCHAR},
+       #{mzhm,jdbcType=VARCHAR},
+       #{patientName,jdbcType=VARCHAR},
+       #{idCard,jdbcType=VARCHAR},
+       #{medicareId,jdbcType=VARCHAR},
+        (select  csz  from gy_xtcs t  where csmc ='MRXZ' and jgid=0),
+       #{sexCode,jdbcType=VARCHAR},
+       to_date(#{birthday,jdbcType=VARCHAR}, 'yyyy-mm-dd'),
+       #{national,jdbcType=VARCHAR},
+       #{phoneNo,jdbcType=VARCHAR},
+       #{phoneNo,jdbcType=VARCHAR},
+       #{JDJG,jdbcType=VARCHAR},
+       sysdate,
+       #{czgh,jdbcType=VARCHAR},
+       sysdate,
+       0,
+       #{address,jdbcType=VARCHAR},
+       #{allergyDrugs,jdbcType=VARCHAR},
+       #{patcardNo,jdbcType=VARCHAR},
+       #{EID,jdbcType=VARCHAR}
+        )
+    </update>
+
+
+    <!--修改档案信息oracle-->
+    <update id="PatientEdit" databaseId="oracle">
+              UPDATE ms_brda
+         SET BRXM = #{patientName},
+             ybkh = #{medicareId,jdbcType=VARCHAR},
+             CSNY = to_date(#{birthday}, 'yyyy-mm-dd'),
+             MZDM = nvl(#{national,jdbcType=VARCHAR},MZDM),
+             JTDH = #{phoneNo},
+             XGSJ = SYSDATE,
+             lxdz = nvl(#{address,jdbcType=VARCHAR},lxdz),
+
+             gmyw = #{allergyDrugs,jdbcType=VARCHAR}
+       WHERE brid =#{patientId}
+    </update>
+    <!--修改档案信息oracle-->
+    <update id="PatientEdit1" databaseId="oracle">
+              UPDATE portal.gy_brda
+         SET BRXM = #{patientName},
+             ybkh = #{medicareId,jdbcType=VARCHAR},
+             CSNY = to_date(#{birthday}, 'yyyy-mm-dd'),
+             MZDM = nvl(#{national,jdbcType=VARCHAR},MZDM),
+             JTDH = #{phoneNo},
+             XGSJ = SYSDATE,
+             lxdz = nvl(#{address,jdbcType=VARCHAR},lxdz),
+
+             gmyw = #{allergyDrugs,jdbcType=VARCHAR}
+       WHERE brid =#{patientId}
+    </update>
+
+    <!--预约挂号保存ms_yygh oracle-->
+    <update id="saveYygh" parameterType="map" databaseId="oracle">
+          INSERT INTO ms_yygh
+        (yyxh, -- 预约序号
+        yylx,
+         jgid, -- 机构代码
+         yymm, -- 预约密码
+         brid, -- 病人ID
+         ghrq, -- 挂号日期
+         ksdm, -- 科室代码
+         zblb, -- 值班类别
+         ysdm, -- 医生代码
+         yylb, -- 预约类别
+         ghbz, -- 挂号标志 | 0.预约 1.履约 2.失约 3.收费 4.退约
+         yyrq, -- 预约日期
+         jzxh, -- 就诊序号
+         sbxh, -- 识别序号
+         zcid, -- 注册ID
+         djgh--, -- 登记工号
+         --hyxh-- 号源序号
+         )
+        SELECT #{orderId},
+              decode(#{dataSources},'CZGH_GZH_YY','WXYY','ZZYY'),
+              #{hospitalId},
+               '123456',
+               #{patientId},
+               to_date(#{registrationDate},'yyyy-mm-dd'),
+               #{depCode},
+               #{timeInterval},
+               #{doctorCode},
+              1,
+               '3',
+               to_date(#{newDate},'yyyy-mm-dd HH24:MI:SS'),
+               NVL((select max(jzxh) + 1
+                       from ms_ghmx
+                      where ysdm = #{doctorCode}
+                        and ksdm = #{depCode}
+                        and ghsj between
+                            to_date(#{registrationDate} || ' 00:00:00',
+                                    'yyyy-mm-dd hh24:mi:ss') AND
+                            to_date(#{registrationDate} || ' 23:59:59',
+                                    'yyyy-mm-dd hh24:mi:ss')),
+                     1),
+               #{sbxh},
+               0,
+               #{czgh}--,
+           --    NULL
+          FROM DUAL
+
+    </update>
+    <!--预约挂号保存ms_yygh sqlserver-->
+    <update id="saveYygh" parameterType="map" databaseId="sqlserver">
+          INSERT INTO ms_yygh
+        (yyxh, -- 预约序号
+         jgid, -- 机构代码
+         yymm, -- 预约密码
+         brid, -- 病人ID
+         ghrq, -- 挂号日期
+         ksdm, -- 科室代码
+         zblb, -- 值班类别
+         ysdm, -- 医生代码
+         yylb, -- 预约类别
+         ghbz, -- 挂号标志 | 0.预约 1.履约 2.失约 3.收费 4.退约
+         yyrq, -- 预约日期
+         jzxh, -- 就诊序号
+         sbxh, -- 识别序号
+         zcid, -- 注册ID
+         djgh--, -- 登记工号
+         --hyxh-- 号源序号
+         )
+        SELECT #{orderId},
+               #{hospitalId},
+               '123456',
+               #{patientId},
+               convert (varchar (10),#{registrationDate},120),
+               #{depCode},
+               #{timeInterval},
+               #{doctorCode},
+               1,
+               '0',
+               convert(varchar (100),#{newDate},120),
+               ISNULL((select max(jzxh) + 1
+                       from ms_ghmx
+                      where ysdm = #{doctorCode}
+                        and ksdm = #{depCode}
+                        and ghsj between
+                            convert(varchar (100),#{registrationDate} +' 00:00:00',
+                                   120) AND
+                            convert (varchar (100),#{registrationDate}+' 23:59:59',
+                                    120)),
+                     1),
+               #{sbxh},
+               0,
+               #{czgh}--,
+
+
+    </update>
+    <!-- 查询预约历史oracle-->
+    <select id="getRegisteredRecords" parameterType="java.util.Map" resultType="java.util.Map" databaseId="oracle">
+        SELECT * FROM v_registeredRecords
+        <where>
+            <if test="hospitalId != null and hospitalId !=''  ">
+                and "hospitalId" =#{hospitalId}
+            </if>
+            <if test="patientId != null and patientId !=''  ">
+                and "patientId" =#{patientId}
+            </if>
+            <if test="depCode != null and depCode !=''  ">
+                and "depCode" =#{depCode}
+            </if>
+            <if test="depCode != null and depCode !=''  ">
+                and "depCode" =#{depCode}
+            </if>
+            <if test="registerBeginDate != null and registerBeginDate !=''  ">
+                and trunc(to_date("registrationDate", 'yyyy-mm-dd hh24:mi:ss')) &gt;= to_date(#{registerBeginDate},'yyyy-mm-dd')
+            </if>
+            <if test="registerEndDate != null and registerEndDate !=''  ">
+                and trunc(to_date("registrationDate", 'yyyy-mm-dd hh24:mi:ss'))&lt;= to_date(#{registerEndDate},'yyyy-mm-dd')
+            </if>
+            <if test="idCard!=null and idCard !='' ">
+                and "idCard" in (${idCard})
+            </if>
+            <if test="wcoerderId!=null and wcoerderId !='' ">
+                and "wcoerderId" like #{wcoerderId}|| '%'
+            </if>
+        </where>
+        order by "registerDate" desc
+    </select>
+
+    <!-- 查询预约历史sqlserver-->
+    <select id="getRegisteredRecords" parameterType="java.util.Map" resultType="java.util.Map" databaseId="sqlserver">
+        SELECT * FROM v_registeredRecords
+        <where>
+            <if test="hospitalId != null and hospitalId !=''  ">
+                and "hospitalId" =#{hospitalId}
+            </if>
+            <if test="patientId != null and patientId !=''  ">
+                and "patientId" =#{patientId}
+            </if>
+            <if test="depCode != null and depCode !=''  ">
+                and "depCode" =#{depCode}
+            </if>
+            <if test="depCode != null and depCode !=''  ">
+                and "depCode" =#{depCode}
+            </if>
+            <if test="registerBeginDate != null and registerBeginDate !='' and registerEndDate != null and registerEndDate !='' ">
+                and "registrationDate"
+                between
+                convert(varchar(100),#{registerBeginDate}+' 00:00:00',120) AND
+                convert(varchar(100),#{registerEndDate}+' 23:59:59',120)
+            </if>
+            <if test="idCard!=null and idCard !='' ">
+                and "idCard" in (${idCard})
+            </if>
+            <if test="wcoerderId!=null and wcoerderId !='' ">
+                and "wcoerderId" like #{wcoerderId}+'%'
+            </if>
+        </where>
+    </select>
+    <!--根据排班信息查询分时段号源信息-->
+    <select id="getSourceInfo" parameterType="java.util.Map" resultType="java.util.Map">
+        select * from v_source_info where   "hylx"=#{dataSources}
+
+            <if test="workId !=null and workId !='' ">
+                and "workId" = #{workId}
+            </if>
+            <if test="sourceId !=null and sourceId !='' ">
+                and "sourceId" = #{sourceId}
+            </if>
+            <if test="sourceStatus !=null and sourceStatus !='' ">
+                and "sourceStatus" = #{sourceStatus}
+            </if>
+        order by "workId" desc, "appointmentDate", "serialNumber"
+    </select>
+    <select id="queryDaypartingInfo" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(*) from v_source_info where   "hylx"=#{dataSources}
+
+            <if test="sourceId !=null and sourceId !='' ">
+                and "sourceId" = #{sourceId}
+            </if>
+            <if test="workId !=null and workId !='' ">
+                and "workId" = #{workId}
+            </if>
+            <if test="sourceStatus !=null and sourceStatus !='' ">
+                and "sourceStatus"=#{sourceStatus}
+            </if>
+        order by "workId" desc, "appointmentDate", "serialNumber"
+    </select>
+
+
+    <!--锁定分时段号源-->
+    <update id="lockDaypartinNumber"  parameterType="java.util.Map">
+      UPDATE ghyy_hyxx
+         SET hyzt =9,czrq=sysdate,brid=#{patientId}
+       WHERE jlxh =#{sourceId} and nvl(hyzt,0) =0 and nvl(ghxh,0)=0 and nvl(brid,0)=0
+    </update>
+    <!--查询分时段号源是否预约-->
+    <select id="queryIsAppointment" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(*) from ghyy_hyxx
+        <where>
+            <if test="sourceId !=null and sourceId !='' ">
+                and jlxh = #{sourceId} and hyzt=9 and brid is not null and brxm is not null and ghxh != 0
+            </if>
+        </where>
+    </select>
+    <!--解锁分时段号源-->
+    <update id="unlockDaypartinNumber">
+      UPDATE ghyy_hyxx
+         SET hyzt =0,brid =null
+       WHERE jlxh =#{sourceId}
+    </update>
+    <!--未锁号源时挂号写入预约信息-->
+    <update id="saveGhyyYyxx" parameterType="java.util.Map" databaseId="oracle">
+      insert into ghyy_yyxx(
+        yyxh,jgid,brid,brxm,sfzh,hyxh,yyzt,yysj,yyr,ghsj,ghr,dybz,fkbz,brxb,yytj
+      ) VALUES (
+        #{ghyy_yyxx_yyxh},#{hospitalId},#{patientId},#{patientName},#{idCard,jdbcType=VARCHAR},#{sourceId},
+        0,to_date((select  to_char(GZRQ,'yyyy-mm-dd')||' '||to_char(QSSJ,'HH24:MI:SS') from ghyy_hyxx  where jlxh =#{sourceId}),'yyyy-mm-dd HH24:MI:SS'),#{czgh},to_date(#{newDate},'yyyy-mm-dd HH24:MI:SS'),#{czgh},
+        0,2,#{sexCode},4
+      )
+    </update>
+
+    <!--未锁号源时挂号写入预约信息-->
+    <update id="saveGhyyYyxx" parameterType="java.util.Map" databaseId="sqlserver">
+      insert into ghyy_yyxx(
+        yyxh,jgid,brid,brxm,sfzh,hyxh,yyzt,yysj,yyr,ghsj,ghr,dybz,fkbz,brxb,yytj
+      ) VALUES (
+        #{ghyy_yyxx_yyxh},#{hospitalId},#{patientId},#{patientName},#{idCard,jdbcType=VARCHAR},#{sourceId},
+        0, convert(varchar(100),(select  qssj from ghyy_hyxx  where jlxh =#{sourceId}),120),#{czgh},#{newDate},#{czgh},
+        0,2,#{sexCode},1
+      )
+    </update>
+    <!--预约的时候更新号源信息-->
+    <update id="updateGhyy_hyxx">
+      UPDATE ghyy_hyxx
+         SET  brid=#{patientId},
+              brxm =#{patientName},
+              yyxh =#{ghyy_yyxx_yyxh}
+       WHERE jlxh =#{sourceId}
+    </update>
+    <!--取号的时候更新号源信息-->
+    <update id="updateGhyy_hyxx_ghxh">
+      UPDATE ghyy_hyxx
+         SET  ghxh=#{sbxh}
+       WHERE jlxh =#{sourceId}
+    </update>
+    <!--取号的时候更新号源信息-->
+    <update id="updateGhyy_yyxx_Zt_Fkbz">
+      UPDATE ghyy_yyxx
+         SET  yyzt=1,
+               fkbz =1
+       WHERE hyxh =  #{sourceId}
+    </update>
+    <!--退号的时候更新号源信息-->
+    <update id="updateGhyy_hyxx_th">
+      UPDATE ghyy_hyxx
+         SET  ghxh=0,yyxh=0,brid=null,brxm=null,hyzt=0
+       WHERE ghxh =#{seqCode} and hyzt=1
+    </update>
+    <!--退号的时候更新分时段预约信息-->
+    <update id="updateGhyy_yyxx_th">
+      UPDATE ghyy_yyxx
+         SET  yyzt=2,qxyy='用户取消',qxsj=sysdate,qxr=#{czgh}
+       WHERE yyid = #{seqCode} and yyzt=#{hyStatus}
+    </update>
+    <!--预约的时候更新号源信息 没有锁定号源-->
+    <update id="updateGhyy_hyxx_Nhy">
+      UPDATE ghyy_hyxx
+         SET  brid=#{patientId},
+              brxm =#{patientName},
+              yyxh =#{ghyy_yyxx_yyxh},
+               ghxh=#{sbxh},
+               hyzt=1
+       WHERE jlxh =#{sourceId} and hyzt=9 and nvl(ghxh,0)=0
+    </update>
+    <!--预约的时候更新号源信息 没有锁定号源-->
+    <update id="updateGhyy_hyxx_Nhy2">
+      UPDATE ghyy_hyxx
+         SET  brid=#{patientId},
+              brxm =#{patientName},
+              yyxh =#{ghyy_yyxx_yyxh},
+               ghxh=#{sbxh},
+               hyzt=1
+       WHERE jlxh =#{sourceId} and hyzt=1 and nvl(ghxh,0)=0
+    </update>
+    <!-- 如果不是号源模式，获取诊序号-->
+    <select id="getJzxh" parameterType="java.util.Map" resultType="java.util.Map" databaseId="oracle">
+       select nvl(max(jzxh),0) + 1 as JZXH
+                     from ms_ghmx
+                    where ysdm = #{doctorCode}
+                      and ksdm = #{depCode,jdbcType=VARCHAR}
+                    <if test="timeIntervalSw!=null and timeIntervalSw!='' ">
+                        and  ghsj between
+                        to_date(#{registrationDate} || ' 00:00:00',
+                        'yyyy-mm-dd hh24:mi:ss') AND
+                        to_date(#{registrationDate} || ' 12:59:59',
+                        'yyyy-mm-dd hh24:mi:ss')
+                    </if>
+                     <if test="timeIntervalXw!=null and timeIntervalXw!='' ">
+                         and  ghsj between
+                         to_date(#{registrationDate} || ' 12:00:00',
+                         'yyyy-mm-dd hh24:mi:ss') AND
+                         to_date(#{registrationDate} || ' 23:59:59',
+                         'yyyy-mm-dd hh24:mi:ss')
+                     </if>
+
+    </select>
+    <!-- 如果不是号源模式，获取诊序号-->
+    <select id="getJzxh" parameterType="java.util.Map" resultType="java.util.Map" databaseId="sqlserver">
+        select ISNULL(max(jzxh),0) + 1 as JZXH
+        from ms_ghmx
+        where ysdm = #{doctorCode}
+        and ksdm = #{depCode,jdbcType=VARCHAR}
+        <if test="timeIntervalSw!=null and timeIntervalSw!='' ">
+            and  ghsj between
+            convert(varchar (100),#{registrationDate} +' 00:00:00',
+            120) AND
+            convert (varchar (100),#{registrationDate}+' 11:59:59',
+            120)
+        </if>
+        <if test="timeIntervalXw!=null and timeIntervalXw!='' ">
+            and  ghsj between
+            convert(varchar (100),#{registrationDate} +' 12:00:00',
+            120) AND
+            convert (varchar (100),#{registrationDate}+' 23:59:59',
+            120)
+        </if>
+
+    </select>
+    <!-- 查询支付方式-->
+    <select id="getZffs" parameterType="java.util.Map" resultType="java.util.Map" >
+        SELECT * FROM ONLINE_PAYMENT_METHOD where dsffkfs=#{source}  and  zymz=1
+
+    </select>
+
+    <!--获取是否入队标志   -->
+    <select id="getEnterFlag" parameterType="java.util.Map" resultType="java.lang.String">
+
+        <if test="reserveSortNo != null and reserveSortNo !=''  ">
+            select nvl((
+            select nvl(hy_wlxcgh_zjrd,0) from ghyy_ghks where ghks = #{depCode,jdbcType=VARCHAR} and jgid = 1 and trunc(sysdate) = to_date(#{registrationDate},'YYYY-MM-DD')
+
+            union
+
+            select nvl(hy_wlyygh_zjrd,0) from ghyy_ghks where ghks = #{depCode,jdbcType=VARCHAR} and jgid = 1 and  to_date(#{registrationDate},'YYYY-MM-DD') > trunc(sysdate)
+            ),0) from dual
+        </if>
+
+        <if test="reserveSortNo == null or reserveSortNo == ''  ">
+            select nvl((
+            select nvl(fhy_wlxcgh_zjrd,0) from ms_ghks where ksdm = #{depCode,jdbcType=VARCHAR} and jgid = 1 and trunc(sysdate) = to_date(#{registrationDate},'YYYY-MM-DD')
+
+            union
+
+            select nvl(fhy_wlyygh_zjrd,0) from ms_ghks where ksdm = #{depCode,jdbcType=VARCHAR} and jgid = 1 and  to_date(#{registrationDate},'YYYY-MM-DD') > trunc(sysdate)
+            ),0) from dual
+        </if>
+    </select>
+    <!--获取 队列ID  获取入队时间-->
+    <select id="getQueueId" parameterType="java.util.Map" resultType="java.util.Map">
+              select zsdm as "queueID",
+                to_char(gzrq, 'YYYY-MM-DD') ||
+                decode(zblb, 1, ' 8:00:00', 2, ' 14:00:00', ' 8:00:00') as "startTime",
+                to_char(gzrq, 'YYYY-MM-DD') ||
+                decode(zblb, 1, ' 12:00:00', 2, ' 17:00:00', ' 12:00:00') as "endTime",
+                decode(zblb, 1, '8:00-12:00', 2, '14:00-17:00', '8:00-12:00') as "timeBet",
+                t.ysdm as "doctorCode",
+                (select m.ygxm from gy_ygdm m where m.ygdm=t.ysdm) as "doctorName",
+                t.ksdm as "deptCode",
+                (select m.ksmc from ms_ghks m where m.ksdm=t.ksdm) as "deptName"
+           from ms_yspb t
+          where jgid = 1
+            and ksdm = #{depCode}
+            and ysdm = #{doctorCode}
+            and to_date(#{registrationDate}, 'YYYY-MM-DD') = trunc(gzrq)
+            and zblb = #{timeInterval}
+
+      </select>
+
+    <!--获取 队列ID  获取入队时间-->
+    <select id="getStartTime" parameterType="java.util.Map" resultType="java.util.Map">
+
+       select to_char(qssj, 'YYYY-MM-DD HH24:mi:ss') as "startTime",
+            to_char(zzsj, 'YYYY-MM-DD HH24:mi:ss') as "endTime",
+            t.ysdm as "doctorCode",
+          (select m.ygxm from gy_ygdm m where m.ygdm=t.ysdm) as "doctorName",
+          t.ghks as "deptCode",
+          (select m.ksmc from ms_ghks m where m.ksdm=t.ghks) as "deptName" ,
+            to_char(qssj, 'HH24:mi') || '-' || to_char(zzsj, 'HH24:mi') as "timeBet"from ghyy_hyxx t where jlxh = #{sourceId}
+    </select>
+
+    <!--获取 排队号码-->
+    <select id="getQueueNo" parameterType="java.lang.String" resultType="java.lang.Integer">
+      select jzxh as "queueNo" from ms_ghmx where sbxh = #{sbxh}
+    </select>
+
+    <insert id="savePdxx" parameterType="map" databaseId="oracle">
+          INSERT INTO pd_dlb(
+                rdid,
+                dlid,
+                jgid,
+                rdsj,
+                pdhm,
+                pdcy,
+                pdzt,
+                kssj,
+                ddsj,
+                jlsj,
+                slgh,
+                slrm,
+                ksid,
+                ksmc,
+                ysid,
+                ysxm,
+                qtid,
+                qtmc,
+                ywlb,
+                ywid,
+                brid,
+                pmid,
+                pmqc,
+                thsj,
+                sxh,
+                cdbz,
+                zsid,
+                jhbz,
+                ggdl,
+                zhcl,
+                zblb,
+                ysdlid,
+                dlid_for,
+                ghtzcs,
+                bzxx,
+                ghbz,
+                hyjzsd,
+                jzbz,
+                jssj)
+                values(
+                #{rdid,jdbcType=VARCHAR},
+                #{dlid,jdbcType=VARCHAR},
+                1,
+                to_date(#{rdsj,jdbcType=VARCHAR},'YYYY-MM-DD HH24:mi:ss'),
+                #{pdhm,jdbcType=VARCHAR},
+                #{pdcy,jdbcType=VARCHAR},
+                #{pdzt,jdbcType=VARCHAR},
+                to_date(#{kssj,jdbcType=VARCHAR},'YYYY-MM-DD HH24:mi:ss'),
+                #{ddsj,jdbcType=VARCHAR},
+                #{jlsj,jdbcType=VARCHAR},
+                #{slgh,jdbcType=VARCHAR},
+                #{slrm,jdbcType=VARCHAR},
+                #{ksid,jdbcType=VARCHAR},
+                #{ksmc,jdbcType=VARCHAR},
+                #{ysid,jdbcType=VARCHAR},
+                #{ysxm,jdbcType=VARCHAR},
+                #{qtid,jdbcType=VARCHAR},
+                (select case when trunc(sysdate) = trunc(to_date(#{rdsj,jdbcType=VARCHAR},'YYYY-MM-DD HH24:mi:ss')) then '10.正常挂号' else '01.预约挂号' end from dual),
+                #{ywlb,jdbcType=VARCHAR},
+                #{ywid,jdbcType=VARCHAR},
+                #{brid,jdbcType=VARCHAR},
+                #{pmid,jdbcType=VARCHAR},
+                #{pmqc,jdbcType=VARCHAR},
+                #{thsj,jdbcType=VARCHAR},
+                #{sxh,jdbcType=VARCHAR},
+                #{cdbz,jdbcType=VARCHAR},
+                #{zsid,jdbcType=VARCHAR},
+                #{jhbz,jdbcType=VARCHAR},
+                #{ggdl,jdbcType=VARCHAR},
+                #{zhcl,jdbcType=VARCHAR},
+                #{zblb,jdbcType=VARCHAR},
+                #{ysdlid,jdbcType=VARCHAR},
+                null,
+                null,
+                #{bzxx,jdbcType=VARCHAR},
+                #{ghbz,jdbcType=VARCHAR},
+                #{hyjzsd,jdbcType=VARCHAR},
+                #{jzbz,jdbcType=VARCHAR},
+                to_date(#{jssj,jdbcType=VARCHAR},'YYYY-MM-DD HH24:mi:ss')
+            )
+    </insert>
+    <update id="updatePdxx" parameterType="map" databaseId="oracle">
+        update pd_dlb
+           set pdzt = 6 , thsj = sysdate
+          where ywid = #{seqCode}
+    </update>
+    <select id="queryLockNumber" parameterType="java.util.Map" resultType="java.lang.Integer">
+       select count(1) from ghyy_hyxx t
+       where  to_char(t.gzrq,'YYYY-MM-DD')=#{registrationDate} and t.ghks =#{depCode} and brid=#{patientId}
+    </select>
+    <insert id="insertMs_ghmx_fy" parameterType="java.util.Map" databaseId="oracle">
+        ${sql}
+    </insert>
+    <insert id="saveJHZF_LOG" parameterType="map" databaseId="oracle">
+          INSERT INTO JHZF_LOG(
+                jlxh, trade_no, trade_id, trade_time, trade_type, his_fphm, his_djh, trade_user, charge_type, trade_amount, his_operate, pay_type)
+                values(
+               #{jlxh,jdbcType=VARCHAR},
+               #{trade_no,jdbcType=VARCHAR},
+               #{trade_id,jdbcType=VARCHAR},
+               sysdate,
+               #{trade_type,jdbcType=VARCHAR},
+               #{his_fphm,jdbcType=VARCHAR},
+               #{his_djh,jdbcType=VARCHAR},
+               #{trade_user,jdbcType=VARCHAR},
+               #{charge_type,jdbcType=VARCHAR},
+               #{trade_amount,jdbcType=VARCHAR},
+               #{his_operate,jdbcType=VARCHAR},
+               #{pay_type,jdbcType=VARCHAR}
+            )
+    </insert>
+    <insert id="saveMs_mzpj_nonprint" parameterType="map" databaseId="oracle">
+         INSERT INTO ms_mzpj_nonprint(sbxh,nonprint_date,czgh,pjlx,pjly,mz_pjhm, mzlb)
+	Values (#{sbxh},sysdate,#{czgh},#{pjlx},#{pjly},#{mz_pjhm},#{mzlb})
+    </insert>
+    <update id="opt_0018_2">
+         update ghyy_hyxx set hyzt=0,
+         brid=null where hylx in (
+         select hylx from MANUFACTURERTYPE ) and
+         hyzt=9 and sysdate-czrq>0.00208
+    </update>
+    <insert id="saveMs_brzh" parameterType="map" databaseId="oracle">
+           insert into  ms_brzh (jgid,brid,brkh) values (#{jgid},#{brid},#{brkh})
+    </insert>
+    <insert id="saveHistory" parameterType="map">
+		INSERT INTO
+		YS_MZ_JZLS(JZXH,GHXH,BRBH,KSDM,YSDM,KSSJ,ZYZD,JZZT,JGID,JZLX,CZPB,FZXH)
+		VALUES
+		(#{JZXH},#{GHXH},#{BRBH},#{KSDM},#{YSDM},sysdate,#{ZYZD},#{JZZT},#{JGID},#{JZLX},#{CZPB},#{FZXH})
+	</insert>
+    <select id="queryAge" parameterType="java.util.Map" resultType="java.util.Map">
+       select * from(
+          select YEARS ages,
+                 months,
+                 abs(trunc(sysdate - add_months(csny, years * 12 + months))) days
+            from (select trunc(months_between(sysdate, csny) / 12) YEARS,
+                         mod(trunc(months_between(sysdate, csny)), 12) MONTHS,
+                         csny
+                    from ms_brda
+                   where csny is not null
+                     and brid = #{patientId}) shisui
+          )  a where ${NLKZ_BDS}
+    </select>
+    <select id="queryBrxb" parameterType="java.util.Map" resultType="java.util.Map">
+       select * from ms_brda where brid = #{patientId} and brxb=#{WOMEN}
+    </select>
+    <!--查询预约日期范围内医生是否有号源-->
+    <select id="opAppAppoint_1" parameterType="map" resultType="java.util.Map">
+     select b.*,a.ZBLB,hyxx.sxh as JZXH1,nvl(a.MZKS,0) as MZKS1 ,(select t.ygxm  from gy_ygdm t where t.ygdm=a.ysdm) "DoctName",a.ysdm as YSDM,to_char(a.gzrq,'yyyy-mm-dd') as gzrq,a.ksdm as KSDM1,
+        decode(trunc(sysdate),a.gzrq,0,1) as YYBZ,mzzs.KSMC as "DeptName",mzzs.ADDR as "CroomName", to_char(hyxx.qssj,'yyyy-mm-dd hh24:mi:ss')  KSSJ,  to_char(hyxx.zzsj,'yyyy-mm-dd hh24:mi:ss') JSSJ,decode(a.zblb,1,'上午',2,'下午') as "orderTimeRange"
+        from ms_yspb a ,ms_ghks b,ms_mzzs mzzs,ghyy_hyxx hyxx
+         where a.ghlb=b.ksdm and a.ksdm=mzzs.ksdm
+           and a.tgbz=0
+           and a.ksdm=hyxx.ghks
+           and a.ysdm=hyxx.ysdm
+           and  a.zblb=hyxx.zblb
+           and  trunc(a.gzrq)=trunc(hyxx.gzrq)
+           and hyxx.jlxh =#{sourceId}
+    </select>
+    <!--查询该患者是否建档-->
+    <select id="opAppAppoint_2" parameterType="map" resultType="java.util.Map">
+        select  BRID,BRXZ,BRXB,MZHM,BRXM,SFZH,BRXM,BRXB,SFZH from
+        ms_brda where brid=#{patientId}
+    </select>
+
+    <!--病人建档，保存病人档案信息oracle-->
+    <update id="opAppAppoint_3">
+      update ms_brda set eid=#{ehealth_card_id}  where sfzh=#{APP_ID_NO}
+    </update>
+
+    <!--查询该患者今天是否已经挂该医生-->
+    <select id="opAppAppoint_4" parameterType="map" resultType="java.util.Map">
+        select 1 from ms_ghmx a
+       where to_char(a.jzsj,'yyyy-mm-dd') =#{gzrq}
+       and  ysdm=#{ysdm} and brid=#{brid}
+    </select>
+
+    <!--插入挂号明细oracle-->
+    <update id="opAppAppoint_5">
+ INSERT INTO ms_ghmx
+        (sbxh,
+         jgid,
+         brid,
+         brxz,
+         ghsj,
+         ghlb,
+         ksdm,
+         ysdm,
+         jzxh,
+         ghcs,
+         ghje,
+         zlje,
+         zjfy,
+         blje,
+         xjje,
+         zpje,
+         zhje,
+         hbwc,
+         qtys,
+         thbz,
+         czgh,
+         czpb,
+         jzhm,
+         mzlb,
+         yybz,
+         yspb,
+         dzsb,
+         sffs,
+         jzzt,
+         jzsj,
+         zblb,
+         ysfwfje,
+         ghxh,
+         zlxh,
+         zjxh,
+         plateformnum,
+         ghlx,
+         xnfp,
+         mzks
+         )
+		  VALUES
+		  (
+         #{sbxh},
+         #{jgid},
+         #{brid},
+         #{brxz},
+         sysdate,
+         #{ghlb},
+         #{ksdm},
+         #{ysdm},
+         #{jzxh},
+         #{ghcs},
+         #{ghje},
+         #{zlje},
+         #{zjfy},
+         #{blje},
+         #{xjje},
+         #{zpje},
+         #{zhje},
+         #{hbwc},
+         #{qtys},
+         #{thbz},
+         #{czgh},
+         #{czpb},
+         #{jzhm},
+         #{mzlb},
+         #{yybz},
+         #{yspb},
+         #{dzsb},
+         #{sffs},
+         #{jzzt},
+         case when trunc(to_date(#{jzsj},'yyyy-mm-dd hh24:mi:ss'))=trunc(sysdate)
+         then sysdate else to_date(#{jzsj},'yyyy-mm-dd hh24:mi:ss') end ,
+         #{zblb},
+         #{ysfwfje},
+         #{ghxh,jdbcType=VARCHAR},
+         #{zlxh,jdbcType=VARCHAR},
+         #{zjxh,jdbcType=VARCHAR},
+         #{plateformnum},
+         #{ghlx},
+         #{xnfp},
+         #{mzks}
+         )
+    </update>
+
+    <!--保存付款信息-->
+    <update id="opAppAppoint_6" parameterType="map">
+      insert into ms_gh_fkxx
+             (jlxh, sbxh, fkfs, fkje)
+      VALUES( #{jlxh}, #{sbxh}, #{fkfs}, #{fkje})
+    </update>
+    <!--保存ms_yyxh-->
+    <update id="opAppAppoint_7" parameterType="map">
+        INSERT INTO ms_yygh
+        (yyxh, -- 预约序号
+         jgid, -- 机构代码
+         yymm, -- 预约密码
+         brid, -- 病人ID
+         ghrq, -- 挂号日期
+         ksdm, -- 科室代码
+         zblb, -- 值班类别
+         ysdm, -- 医生代码
+         yylb, -- 预约类别
+         ghbz, -- 挂号标志 | 0.预约 1.履约 2.失约 3.收费 4.退约
+         yyrq, -- 预约日期
+         jzxh, -- 就诊序号
+         sbxh, -- 识别序号
+         zcid, -- 注册ID
+         djgh -- 登记工号
+
+         )
+      VALUES
+      (
+      #{yyxh},
+      #{jgid},
+      #{yymm},
+      #{brid},
+      sysdate,
+      #{ksdm},
+      #{zblb},
+      #{ysdm},
+      #{yylb},
+      #{ghbz},
+       to_date(#{yyrq},'yyyy-mm-dd hh24:mi:ss') ,
+      #{jzxh},
+      #{sbxh},
+      #{zcid},
+      #{djgh}
+      )
+    </update>
+    <!--保存ghyy_yyxx-->
+    <update id="opAppAppoint_8" parameterType="map">
+      insert into ghyy_yyxx
+             (
+             yyxh,
+             jgid,
+             brid,
+             brxm,
+             sfzh,
+             hyxh,
+             yyzt,
+             yysj,
+             yyr,
+             ghsj,
+             ghr,
+             dybz,
+             fkbz,
+             brxb,
+             yytj,
+             lrsj,
+             yyid
+             )
+      VALUES(
+            #{yyxh},
+            #{jgid},
+            #{brid},
+            #{brxm},
+            #{sfzh,jdbcType=VARCHAR},
+            #{hyxh},
+            #{yyzt},
+            to_date(#{yysj},'yyyy-mm-dd hh24:mi:ss'),
+            #{yyr },
+            sysdate,
+            #{ghr },
+            #{dybz},
+            #{fkbz},
+            #{brxb},
+            #{yytj},
+            sysdate,
+            #{yyid}
+      )
+    </update>
+    <!--更新ms_yspb-->
+    <update id="opAppAppoint_9" parameterType="map" >
+            UPDATE ms_yspb
+            SET yyrs = yyrs + 1 ,
+                ygrs = ygrs + case when trunc(sysdate)=trunc(gzrq) then 0 else 1 end,
+                jzxh=jzxh+1
+            WHERE to_char(gzrq,'yyyy-mm-dd')=#{gzrq}
+            AND ksdm = #{ksdm}
+            AND ysdm = #{ysdm}
+            AND zblb = #{zblb}
+
+    </update>
+    <update id="updateHyxx" parameterType="map" >
+        UPDATE ghyy_hyxx
+        SET  brid=#{brid},
+        brxm =#{brxm},
+        yyxh =#{yyxh},
+        ghxh=#{yyid},
+        hyzt=1
+        WHERE jlxh =#{hyxh}
+        and nvl(hyzt,0) = 9
+
+    </update>
+</mapper>

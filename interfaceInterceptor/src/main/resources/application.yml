@@ -1,0 +1,11 @@
+server:
+  port: 9999
+
+eureka:
+  client:
+    register-with-eureka: false
+    service-url:
+      defaultZone: http://admin:admin@eureka-1:9101/eureka,http://admin:admin@eureka-2:9102/eureka,http://admin:admin@eureka-3:9103/eureka
+
+
+hospitalIdForDb: 5100000000001

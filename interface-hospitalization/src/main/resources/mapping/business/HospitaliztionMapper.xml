@@ -1,0 +1,689 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bsoft.mapper.business.HospitaliztionMapper">
+
+    <!--一日清单 查询病情情况-->
+    <select id="onedayBillbq" parameterType="map" resultType="java.util.Map">
+        select * from v_onedaybill t where 1=1
+        <if test="hospitalCode!=null and hospitalCode !='' ">
+            and JGID =#{hospitalCode}
+        </if>
+        <if test="patientIdentityCardNumber!=null and patientIdentityCardNumber !='' ">
+            and (SFZH =#{patientIdentityCardNumber} or FYZH =#{patientIdentityCardNumber})
+        </if>
+    </select>
+
+    <!--一日清单费用情况-->
+    <select id="onedayBillfy" parameterType="map" resultType="java.util.Map">
+        select sum(c.zje) as totalFee,
+        t.zyh as inHospitalRecordNumber,
+        to_char(t.ryrq,'YYYY-MM-DD HH24:MI:SS') as inDate,
+        to_char(t.cyrq,'YYYY-MM-DD HH24:MI:SS') as outDate,
+        '2' as status,
+        t.brch as bedNumber
+        from zy_brry t
+        left join (select sum(zjje) as zje, zyh from V_ZYYRQD group by zyh) c
+        on c.zyh = t.zyh
+        where t.CYPB = '8'
+        <if test="hospitalCode!=null and hospitalCode!=''">
+            and jgid =#{hospitalCode}
+        </if>
+        <if test="patientIdentityCardNumber!=null and patientIdentityCardNumber!=''">
+            and ( sfzh =#{patientIdentityCardNumber} or ybkh =#{patientIdentityCardNumber})
+        </if>
+
+        group by t.zyh,t.ryrq,t.cyrq,t.brch,t.jgid,t.ybkh,t.sfzh
+
+
+    </select>
+
+    <!--住院患者信息列表-->
+    <select id="getInpatients" parameterType="map" resultType="java.util.Map">
+        select * from v_Inpatients_Lists t
+        <where>
+            <if test="depCode!=null and depCode !='' ">
+                and "hospitalId"=#{hospitalId}
+            </if>
+            <if test="depCode!=null and depCode !='' ">
+                and "depCode"=#{depCode}
+            </if>
+            <if test="depName!=null and depName !='' ">
+                and "depName" =#{depName}
+            </if>
+            <if test="chiefPhysicianCode!=null and chiefPhysicianCode !='' ">
+                and "chiefPhysicianCode"=#{chiefPhysicianCode}
+            </if>
+            <if test="chiefPhysicianName!=null and chiefPhysicianName !='' ">
+                and "chiefPhysicianName" =#{chiefPhysicianName}
+            </if>
+            <if test="leaveHospital!=null and leaveHospital !='' ">
+                and "leaveHospital" =#{leaveHospital}
+            </if>
+
+        </where>
+    </select>
+
+    <!--住院患者信息列表   护士站-->
+    <select id="getNurseInpatients" parameterType="map" resultType="java.util.Map">
+        select * from v_nurseInpatients_Lists t
+        <where>
+            <if test="depCode!=null and depCode !='' ">
+                and "hospitalId"=#{hospitalId}
+            </if>
+            <if test="bedDeptNo!=null and bedDeptNo !='' ">
+                and "bedDeptNo" = #{bedDeptNo}
+            </if>
+            <if test="bedDeptName!=null and bedDeptName !='' ">
+                and "bedDeptName" like '%'||#{bedDeptName}||'%'
+            </if>
+
+        </where>
+    </select>
+    <!--查询患者基本信息 oracle-->
+    <select id="getPatientInfo" parameterType="map" resultType="java.util.Map" >
+        select * from v_patient_information t
+        <where>
+            <if test="hospitalizNo!=null and hospitalizNo !='' ">
+                and "hospitalizNo"=#{hospitalizNo}
+            </if>
+            <if test="hospitalId!=null and hospitalId !='' ">
+                and "hospitalId" =#{hospitalId}
+            </if>
+        </where>
+    </select>
+
+
+    <!--查询患者住院详情-->
+    <select id="getHospitalizationInfo" parameterType="map" resultType="java.util.Map">
+        select * from v_Hospitalization_Info t
+        <where>
+            <if test="hospitalizNo!=null and hospitalizNo !='' ">
+                and "hospitalizNo"=#{hospitalizNo}
+            </if>
+            <if test="hospitalId!=null and hospitalId !='' ">
+                and "hospitalId" =#{hospitalId}
+            </if>
+        </where>
+    </select>
+
+    <select id="getPatientPayRecords" parameterType="map" resultType="java.util.Map">
+        select *
+        from v_getPatientPayRecords
+        where "patientId" = #{patientId}
+        <if test="receiptNo!=null and receiptNo!=''">
+            and "receiptNo" =#{receiptNo}
+        </if>
+        <if test="payTimeStart!=null and payTimeStart!=''">
+            and "payTime" >= (#{payTimeStart}||' 00:00')
+        </if>
+        <if test="payTimeEnd!=null and payTimeEnd!=''">
+            <![CDATA[ and "payTime" <= (#{payTimeEnd}||' 24:00')]]>
+        </if>
+        <if test="hospitalId!=null and hospitalId !='' ">
+            and "hospitalId" =#{hospitalId}
+        </if>
+    </select>
+
+    <select id="getPatientAdviceList" parameterType="map" resultType="java.util.Map">
+        select *
+        from v_patientAdviceList a
+        where "hospitalizNo" =#{hospitalizNo}
+        <if test="adviceType!=null and adviceType!=''">
+            and "adviceType" =#{adviceType}
+        </if>
+        <if test="adviceName!=null and adviceName!=''">
+            and "adviceName" like '%'||#{adviceName}||'%'
+        </if>
+        <if test="roleType!=null and roleType!=''">
+            and ("doctorCommitFlag" = 1 or "doctorAdviceFlag" = 0 )
+        </if>
+        <if test="createTimeStart!=null and createTimeStart!=''">
+            and "createTime" >= (#{createTimeStart}||' 00:00')
+        </if>
+        <if test="createTimeEnd!=null and createTimeEnd!=''">
+            <![CDATA[ and "createTime" <= (#{createTimeEnd}||' 24:00')]]>
+        </if>
+        <if test="hospitalId!=null and hospitalId !='' ">
+            and "hospitalId" =#{hospitalId}
+        </if>
+         order by "adviceGroupNo" desc
+    </select>
+
+
+    <select id="getHospitalizDiagnosis" parameterType="map" resultType="java.util.Map">
+        select *
+        from v_getHospitalizDiagnosis a
+        where "hospitalizNo" =#{hospitalizNo}
+        <if test="diseaseCode!=null and diseaseCode!=''">
+            and "diseaseCode" =#{diseaseCode}
+        </if>
+        <if test="diagnosisType!=null and diagnosisType!=''">
+            and "diagnosisType" =#{diagnosisType}
+        </if>
+        <if test="diseaseNo!=null and diseaseNo!=''">
+            and "diseaseNo" =#{diseaseNo}
+        </if>
+        <if test="hospitalId!=null and hospitalId !='' ">
+            and "hospitalId" =#{hospitalId}
+        </if>
+    </select>
+    <select id="addHospitalizDiagnosis1" parameterType="map" resultType="java.util.Map">
+        select max(a.bahm) as BRBH,max(nvl(b.jbzh,0)+1) as JBZH,max(ZDXH) as ZDXH from zy_brry a left join  ys_zy_jbzd b  on  a.zyh=b.jzhm
+        and zdlb=#{diagnosticTypes}
+        where  cypb!=8 and zyh=#{hospitalizNo}
+
+
+    </select>
+
+    <select id="getRoutineDiagnosis" parameterType="map" resultType="java.util.Map">
+        select *
+        from v_getRoutineDiagnosis a
+        where 1 = 1
+        <if test="diseaseName!=null and diseaseName!=''">
+            and "diseaseName" like '%'||#{diseaseName}||'%'
+        </if>
+        <if test="pinyinCode!=null and pinyinCode!=''">
+            and "pinyinCode" like '%'||#{pinyinCode}||'%'
+        </if>
+
+    </select>
+
+    <select id="getCountHospitalizDiagnosis" parameterType="map" resultType="java.lang.Integer">
+        select count(*) as cnt
+        from v_getHospitalizDiagnosis a
+        where "hospitalizNo" =#{hospitalizNo}
+          and "diagnosisType"=3
+        <if test="diseaseNo!=null and diseaseNo!=''">
+            and "diseaseNo" =#{diseaseNo}
+        </if>
+
+    </select>
+
+    <select id="getCountRcjl" parameterType="map" resultType="java.lang.Integer">
+        select count(*) as cnt
+        from zy_rcjl a
+        where zyh =#{hospitalizNo}
+        and jgid = #{hospitalId}
+        and czlx = 1
+        and bqpb = 0
+
+    </select>
+
+    <select id="getCountHospitalizDiagnosisPrim" parameterType="map" resultType="java.lang.Integer">
+        select count(*) as cnt
+        from v_getHospitalizDiagnosis a
+        where "hospitalizNo" =#{hospitalizNo}
+         and "diseaseNo" =#{diseaseNo}
+         and "diagnosisType"=#{diagnosisType}
+
+    </select>
+
+    <insert id="addHospitalizDiagnosis" parameterType="map">
+      INSERT INTO YS_ZY_JBZD
+  (JLBH, JZHM, BRBH, ZXLB, ZDLB, JBZH, ZNXH, JBDM, JBMC, MSZD, ZGQK, ZDYS, ZDSJ, ZFBZ, TJBZ, BKZT,
+  QZBZ, QZSJ, DYBZ, ZDLX, ZDXH,  FBRQ)
+VALUES
+  (#{JLBH}, #{hospitalizNo}, #{BRBH}, #{medicalCategory}, #{diagnosticTypes}, #{JBZH},1,
+   #{diseaseNo}, #{diseaseName}, #{diseaseName}, #{outcomeSituation}, #{doctorId},sysdate,0,1, 0,
+    #{diagnosis}, #{diagnosticTime,jdbcType=TIMESTAMP}, 0,  #{diagnosticCategories}, #{ZDXH}, #{morbidityTime,jdbcType=TIMESTAMP})
+
+    </insert>
+
+    <insert id="addPatientAdvice" parameterType="map">
+        INSERT INTO zy_bqyz
+        (jlxh  ,
+        zyh   ,
+        jgid  ,
+        yzmc  ,
+        ypxh  ,
+        ypcd  ,
+        xmlx  ,
+        yplx  ,
+        mrcs  ,
+        ycjl  ,
+        ycsl  ,
+        mzcs  ,
+        kssj  ,
+        tzsj  ,
+        ypdj  ,
+        ypyf  ,
+        ysgh  ,
+        tzys  ,
+        czgh  ,
+        fhgh  ,
+        sybz  ,
+        srks  ,
+        zfpb  ,
+        yjzx  ,
+        yjxh  ,
+        zxks  ,
+        yzzh  ,
+        sypc  ,
+        fysx  ,
+        yepb  ,
+        yfsb  ,
+        lsyz  ,
+        lsbz  ,
+        yzpb  ,
+        jfbz  ,
+        bzxx  ,
+        fyfs  ,
+        tpn   ,
+        ysbz  ,
+        ystj  ,
+        yzpx  ,
+        zfbz  ,
+        srcs  ,
+        sfjg  ,
+        yyts  ,
+        yfgg  ,
+        yfdw  ,
+        brks  ,
+        brbq  ,
+        brch  ,
+        yzzxsj,
+        fhbz  ,
+        fhsj  ,
+        tzfhbz,
+        tzfhr ,
+        tzfhsj,
+        pspb  ,
+        psjg  ,
+        pssj  ,
+        psgh
+        )
+        VALUES
+        (#{jlxh} ,
+        #{hospitalizNo,jdbcType=NUMERIC} ,
+        #{hospitalId,jdbcType=VARCHAR}   ,
+        #{adviceName,jdbcType=VARCHAR} ,
+        #{drugsNo} ,
+        #{productAddr} ,
+        #{programType} ,
+        #{drugsType} ,
+        #{dayTimes} ,
+        #{onceDose} ,
+        #{onceNum} ,
+        #{weekTimes} ,
+        to_date(#{createTime},'YYYY-MM-DD hh24:mi:ss') ,
+        null  ,
+        #{drugsUnitPrice} ,
+        #{drugsUsage} ,
+        #{adviceDoctor} ,
+        null   ,
+        #{createUser}   ,
+        null  ,
+        #{useFlag}      ,
+        #{inputDept}    ,
+        #{selfPay}      ,
+        #{medicalSkillMain} ,
+        #{mediclSkillNo},
+        #{executeDept,jdbcType=NUMERIC}  ,
+        decode(#{adviceGroupNo},0,#{yzzh},#{adviceGroupNo}),
+        #{frequency}    ,
+        #{dispensProperty} ,
+        #{babyFlag}     ,
+        #{medicalDept}  ,
+        #{adviceType}   ,
+        #{hisFlag}      ,
+        #{adviceFlag}   ,
+        #{chargingFlag} ,
+        #{remark,jdbcType=VARCHAR}       ,
+        #{dispensType,jdbcType=NUMERIC}  ,
+        #{tpn}          ,
+        #{doctorAdviceFlag,jdbcType=NUMERIC} ,
+        #{doctorCommitFlag} ,
+        #{adviceOrder,jdbcType=NUMERIC}  ,
+        #{cancelFlag}   ,
+        #{firstTimes}   ,
+        0  ,
+        #{useDays,jdbcType=NUMERIC}      ,
+        #{deptSpecs,jdbcType=VARCHAR}    ,
+        #{deptUnit,jdbcType=VARCHAR}     ,
+        #{patientDept}  ,
+        #{patientArea}  ,
+        #{patientBedNo} ,
+        null ,
+        #{checkFlag}         ,
+        null          ,
+        0     ,
+        null ,
+        null ,
+        #{skinTestFlag}   ,
+        #{skinTestResult,jdbcType=NUMERIC} ,
+        null    ,
+        #{skinTestUser,jdbcType=VARCHAR}
+
+        )
+    </insert>
+
+    <update id="modifyHospitalizDiagnosis" parameterType="map" >
+    UPDATE ys_zy_jbzd a
+    SET a.ZXLB  = #{medicalCategory} ,
+        a.JBDM = #{diseaseNo} ,
+        a.JBMC = #{diseaseName} ,
+        a.MSZD = #{diseaseName} ,
+        a.ZGQK = #{outcomeSituation} ,
+        a.ZDYS = #{doctorId},
+        a.QZBZ = #{diagnosis},
+        a.QZSJ =  #{diagnosticTime,jdbcType=TIMESTAMP},
+        a.FBRQ = #{morbidityTime,jdbcType=TIMESTAMP}
+    where a.jzhm  = #{hospitalizNo}
+      and   a.JLBH = #{recordNumber}
+
+    </update>
+
+    <update id="updateZy_brry" parameterType="map" >
+    UPDATE zy_brry a
+    SET a.ryzd  =  case when ryzd is null or ryzd = '' then #{diseaseName}  else ryzd ||','||#{diseaseName}  end
+    where a.zyh  = #{hospitalizNo}
+
+    </update>
+
+    <update id="updateZy_bqyz" parameterType="map" >
+    UPDATE zy_bqyz a
+    SET a.ystj  =  1
+    where a.zyh  = #{hospitalizNo}
+      and a.ystj = 0
+      and a.lsyz = #{adviceType}
+
+    </update>
+
+
+
+    <update id="modifyPatientAdvice" parameterType="map" >
+      	  UPDATE zy_bqyz a
+            SET
+
+          a.jgid    = #{hospitalId,jdbcType=VARCHAR}   ,
+          a.yzmc    = #{adviceName,jdbcType=VARCHAR} ,       -- 医嘱名称
+          a.ypxh    = #{drugsNo} ,          -- 药品序号
+          a.ypcd    = #{productAddr} ,      -- 药品产地
+          a.xmlx    = #{programType} ,      -- 项目类型
+          a.yplx    = #{drugsType} ,        -- 药品类型
+          a.mrcs    = #{dayTimes} ,         -- 每日次数
+          a.ycjl    = #{onceDose} ,         -- 一次剂量
+          a.ycsl    = #{onceNum} ,          -- 一次数量
+          a.mzcs    = #{weekTimes} ,        -- 每周数量
+          a.kssj    = to_date(#{createTime},'YYYY-MM-DD hh24:mi:ss')  ,       -- 开单时间
+          a.tzsj    = to_date(#{stopTime},'YYYY-MM-DD hh24:mi:ss')  ,         -- 停止时间
+          a.ypdj    = #{drugsUnitPrice} ,   -- 药品单价
+          a.ypyf    = #{drugsUsage} ,       -- 药品用法
+          a.ysgh    = #{adviceDoctor} ,     -- 开嘱医生
+          a.tzys    = #{stopDoctor}   ,     -- 停嘱医生
+          a.czgh    = #{createUser}   ,     -- 操作工号
+          a.fhgh    = #{checkUser}    ,     -- 复核工号
+          a.sybz    = #{useFlag}      ,     -- 使用标志
+          a.srks    = #{inputDept}    ,     -- 输入科室
+          a.zfpb    = #{selfPay}      ,     -- 自付判别
+          a.yjzx    = #{medicalSkillMain} , -- 医技主项
+          a.yjxh    = #{mediclSkillNo},     -- 医技序号
+          a.zxks    = #{executeDept,jdbcType=NUMERIC}  ,     -- 执行科室
+          a.yzzh    = #{adviceGroupNo},     -- 医嘱组号
+          a.sypc    = #{frequency}    ,     -- 使用频次
+          a.fysx    = #{dispensProperty} ,  --发药属性
+          a.yepb    = #{babyFlag}     ,     -- 婴儿判别
+          a.yfsb    = #{medicalDept}  ,     -- 药房识别
+          a.lsyz    = #{adviceType}   ,     -- 临时 or 长期
+          a.lsbz    = #{hisFlag}      ,     -- 历史标志
+          a.yzpb    = #{adviceFlag}   ,     -- 医嘱判别
+          a.jfbz    = #{chargingFlag} ,     -- 计费标志
+          a.bzxx    = #{remark}       ,     -- 备注信息
+          a.fyfs    = #{dispensType}  ,     -- 发药方式
+          a.tpn     = #{tpn}          ,     -- tpn
+          a.ysbz    = #{doctorAdviceFlag,jdbcType=NUMERIC} , -- 医生医嘱标志
+          a.ystj    = #{doctorCommitFlag} , -- 医生提交标志
+          a.yzpx    = #{adviceOrder}  ,     -- 医嘱排序
+          a.zfbz    = #{cancelFlag}   ,     -- 作废标志
+          a.srcs    = #{firstTimes}   ,     -- 首日次数
+          a.sfjg    = #{checkResult}  ,     -- 审方结果
+          a.yyts    = #{useDays,jdbcType=NUMERIC}      ,     -- 用药天数
+          a.yfgg    = #{deptSpecs}    ,     -- 药房规格
+          a.yfdw    = #{deptUnit}     ,     -- 药房单位
+          a.brks    = #{patientDept}  ,     -- 病人科室
+          a.brbq    = #{patientArea}  ,     -- 病人病区
+          a.brch    = #{patientBedNo} ,     -- 病人床号
+
+          a.fhbz    = #{checkFlag}         ,-- 复核标志
+
+          a.tzfhbz  = #{stopCheckFlag}     ,-- 停嘱复核标志
+          a.tzfhr   = #{stopCheckUser} ,    -- 停嘱复核人
+
+          a.pspb    = #{skinTestFlag}   ,   -- 皮试判别
+          a.psjg    = #{skinTestResult} ,   -- 皮试结果
+
+          a.psgh    = #{skinTestUser,jdbcType=VARCHAR}
+          WHERE a.jlxh = #{id} and fhbz=0
+    </update>
+
+    <update id="removePatientAdvice" parameterType="map" >
+      	  update zy_bqyz  set zfbz=1 WHERE jlxh = #{id} and zfbz=0 and fhbz=0
+    </update>
+
+    <delete id="removeHospitalizDiagnosis" parameterType="map" >
+    delete ys_zy_jbzd a
+    where a.jzhm  = #{hospitalizNo}
+      and   a.jlbh = #{recordNumber}
+      and a.zfbz =0
+
+    </delete>
+
+    <update id="submissionReview" parameterType="map" >
+    UPDATE ZY_BQYZ a
+    SET a.fhgh  = #{checkUser} ,
+        a.fhsj =  to_date(#{checkTime},'yyyy-mm-dd hh24:mi:ss'),
+        a.fhbz=1
+    where a.yzzh  = #{adviceGroupNo}
+      and fhgh is null
+      and fhsj is null
+      and fhbz=0
+      and (ysbz = 0 or ystj = 1)
+
+    </update>
+
+    <update id="cancelSubmissionReview" parameterType="map" >
+    UPDATE ZY_BQYZ a
+    SET a.fhgh  = null  ,
+        a.fhsj = null ,
+        a.fhbz=0
+    where a.zyh  = #{hospitalizNo}
+      and a.yzzh = #{adviceGroupNo}
+
+    </update>
+
+    <select id="getRotatingBed" parameterType="map" resultType="java.util.Map">
+        select brch as "bedNumber",
+               CWXB as "sexCode",
+               CWFY as  "bedFee",
+               ICU,
+               JCPB as "Remarks"
+         FROM zy_cwsz
+        where  ksdm=#{depCode} and zyh is null
+        <if test="bedNumber!=null and bedNumber!=''">
+            and brch=#{bedNumber}
+        </if>
+        <if test="sexCode!=null and sexCode!=''">
+            and CWXB=#{sexCode}
+        </if>
+    </select>
+    <update id="submissionRotatingBed1" parameterType="map" >
+    UPDATE ZY_BRRY a
+    SET a.BRCH  = #{bedNumber}
+    where a.zyh  = #{hospitalizNo}
+
+    </update>
+    <update id="submissionRotatingBed2" parameterType="map" >
+    UPDATE ZY_CWSZ a
+    SET a.zyh  = #{hospitalizNo}
+    where  ksdm=#{depCode} and zyh is null and brch=#{bedNumber}
+
+    </update>
+
+    <select id="getDischargeMedication" parameterType="map" resultType="java.util.Map">
+        select *
+        from v_patientAdviceList a
+        where "hospitalizNo" =#{hospitalizNo} and "programType"=3
+        <if test="adviceType!=null and adviceType!=''">
+            and "adviceType" =#{adviceType}
+        </if>
+        <if test="adviceName!=null and adviceName!=''">
+            and "adviceName" like '%'||#{adviceName}||'%'
+        </if>
+        <if test="createTimeStart!=null and createTimeStart!=''">
+            and  to_date("createTime" ,'YYYY-MM-DD hh24:mi')>= to_date(#{createTimeStart}||' 00:00','YYYY-MM-DD hh24:mi')
+        </if>
+        <if test="createTimeEnd!=null and createTimeEnd!=''">
+            <![CDATA[ and   to_date("createTime",'YYYY-MM-DD hh24:mi')<= to_date(#{createTimeEnd}||' 23:59','YYYY-MM-DD hh24:mi')]]>
+        </if>
+    </select>
+
+
+    <select id="waitingDistribution" parameterType="map" resultType="java.util.Map">
+        select *
+        from v_waitingDistribution a
+        where "hospitalId" =#{hospitalId} and "patientDept"=#{patientDept}
+
+    </select>
+
+    <select id="onedayBill" parameterType="map" resultType="java.util.Map">
+        select *
+        from v_listHospitalizationPayment a
+        where "hospitalizNo" =#{hospitalizNo} and "costDate"=#{costDate}
+
+    </select>
+    <select id="onedayBillAll" parameterType="map" resultType="java.util.Map">
+        select "costDate","hospitalizNo",sum("total") as "TotalAmount"
+        from v_listHospitalizationPayment a
+        where "hospitalizNo" =#{hospitalizNo}
+        <if test="costDate!=null and costDate!=''">
+            and "costDate" =#{costDate}
+        </if>
+        group by "costDate","hospitalizNo"
+    </select>
+    <select id="listHospitalizationPayment" parameterType="map" resultType="java.util.Map">
+        select *
+        from v_listHospitalizationPayment a
+        where "hospitalizNo" =#{hospitalizNo}
+        <if test="startTime!=null and startTime!=''">
+            and  to_date("costDate" ,'YYYY-MM-DD')>= to_date(#{startTime},'YYYY-MM-DD')
+        </if>
+        <if test="endTime!=null and endTime!=''">
+            <![CDATA[ and   to_date("costDate",'YYYY-MM-DD')<= to_date(#{endTime},'YYYY-MM-DD')]]>
+        </if>
+    </select>
+
+    <select id="listHospitalizationRecord" parameterType="map" resultType="java.util.Map">
+        select *
+        from v_listHospitalizationRecord a
+        where 1=1
+        <if test="patientId!=null and patientId!=''">
+            and "patientId" =#{patientId}
+        </if>
+        <if test="idCard!=null and idCard!=''">
+            and "idCard" in(${idCard})
+        </if>
+        <if test="hospitalizNo!=null and hospitalizNo!=''">
+            and "hospitalizNo" =#{hospitalizNo}
+        </if>
+        <if test="patcardNo != null and patcardNo !=''  ">
+            and "patcardNo" =#{patcardNo}
+        </if>
+        <if test="EID != null and EID !=''  ">
+            and "EID" =#{EID}
+        </if>
+        <if test="leaveHospital != null and leaveHospital !=''  ">
+            and "leaveHospital" =#{leaveHospital}
+        </if>
+        <if test="outpatientNo != null and outpatientNo !=''  ">
+            and "outpatientNo" =#{outpatientNo}
+        </if>
+    </select>
+
+    <select id="listPaymentHistory" parameterType="map" resultType="java.util.Map">
+        select *
+        from v_listPaymentHistory a
+        where "hospitalizNo" =#{hospitalizNo}
+        order by "payedTime"
+    </select>
+
+    <!--查询getXtcs-->
+    <select id="getXtcs" parameterType="String" resultType="String">
+        select csz from gy_xtcs where csmc=#{csmc,jdbcType=VARCHAR} and jgid =#{jgid}
+    </select>
+    <!--新增缴费记录-->
+    <select id="addPaymentHistory1" parameterType="map" resultType="java.util.Map">
+       select zyh as zyh  from zy_brry where zyh=${hospitalizNo} and cypb=0
+    </select>
+    <!--根据工号查询发票 oracle-->
+    <select id="addPaymentHistory2" parameterType="String" resultType="java.util.Map" databaseId="oracle">
+        SELECT LYRQ,DQHM,ZZHM,YGDM
+        FROM (SELECT *
+        FROM ZY_YGPJ
+        WHERE ZZHM &gt;= dqhm
+        AND PJLX = 2
+        AND sybz = 0
+        AND YGDM =#{czgh,jdbcType=VARCHAR}
+        ORDER BY LYRQ)
+        WHERE ROWNUM &gt;= 1
+    </select>
+
+    <!--根据工号查询发票 sqlserver-->
+    <select id="addPaymentHistory2" parameterType="String" resultType="java.util.Map" databaseId="sqlserver">
+        SELECT  top 1  LYRQ,DQHM,ZZHM,YGDM
+        FROM (SELECT TOP 100 PERCENT *
+        FROM ZY_YGPJ
+        WHERE ZZHM >= dqhm
+        AND PJLX = 2
+        AND sybz = 0
+        AND YGDM =#{czgh,jdbcType=VARCHAR}
+        ORDER BY LYRQ ) a
+
+    </select>
+    <!--使用号码等于终止号码，说明是最后一张发票打上sypb-->
+    <update id="addPaymentHistory3" parameterType="map">
+    UPDATE ZY_YGPJ SET sybz=1 WHERE LYRQ=#{LYRQ} AND YGDM = #{YGDM} AND PJLX = 2 and sybz=0
+
+    </update>
+    <!--发票未使用发票号完加一-->
+    <update id="addPaymentHistory4" parameterType="map">
+    UPDATE ZY_YGPJ SET dqhm=#{DQHM} WHERE LYRQ=#{LYRQ} AND YGDM =#{YGDM} AND PJLX = 2 and sybz=0
+    </update>
+    <!--写zy_tbkk oracle-->
+    <insert id="addPaymentHistory5" parameterType="map" databaseId="oracle">
+      insert into zy_tbkk
+     (jkxh, jgid, zyh, jkrq, jkje, jkfs, sjhm, jscs, czgh,  zfpb,zcpb ,plateformnum )
+      values
+      (#{jkxh,jdbcType=VARCHAR},1,#{zyh,jdbcType=VARCHAR},sysdate,#{jkje,jdbcType=NUMERIC},#{jkfs,jdbcType=VARCHAR},#{sjhm,jdbcType=VARCHAR},0,#{czgh,jdbcType=VARCHAR},0,0,#{plateformnum,jdbcType=VARCHAR})
+    </insert>
+
+    <!--写zy_tbkk sqlserver-->
+    <insert id="addPaymentHistory5" parameterType="map" databaseId="sqlserver">
+      insert into zy_tbkk
+     (jkxh, jgid, zyh, jkrq, jkje, jkfs, sjhm, jscs, czgh,  zfpb,zcpb,  sjly ,dsfzflsh )
+      values
+      (#{jkxh,jdbcType=VARCHAR},1,#{zyh,jdbcType=VARCHAR},GETDATE(),#{jkje,jdbcType=NUMERIC},#{jkfs,jdbcType=VARCHAR},#{sjhm,jdbcType=VARCHAR},0,#{czgh,jdbcType=VARCHAR},0,0,3,#{dsfzflsh,jdbcType=VARCHAR} )
+    </insert>
+    <!-- 查询支付方式-->
+    <select id="getZffs" parameterType="java.util.Map" resultType="java.util.Map" >
+        SELECT * FROM ONLINE_PAYMENT_METHOD where dsffkfs=#{paymentMethod} and  zymz=2
+
+    </select>
+    <insert id="saveJHZF_LOG" parameterType="map" databaseId="oracle">
+          INSERT INTO JHZF_LOG(
+                jlxh, trade_no, trade_id, trade_time, trade_type, his_fphm, his_djh, trade_user, charge_type, trade_amount, his_operate, pay_type)
+                values(
+               #{jlxh,jdbcType=VARCHAR},
+               #{trade_no,jdbcType=VARCHAR},
+               #{trade_id,jdbcType=VARCHAR},
+               sysdate,
+               #{trade_type,jdbcType=VARCHAR},
+               #{his_fphm,jdbcType=VARCHAR},
+               #{his_djh,jdbcType=VARCHAR},
+               #{trade_user,jdbcType=VARCHAR},
+               #{charge_type,jdbcType=VARCHAR},
+               #{trade_amount,jdbcType=VARCHAR},
+               #{his_operate,jdbcType=VARCHAR},
+               #{pay_type,jdbcType=VARCHAR}
+            )
+    </insert>
+</mapper>
