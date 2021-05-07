@@ -28,6 +28,7 @@ public class HospitalizationApplication {
         System.out.println("11111111111111");
         System.out.println("2222222222222222");
         System.out.println("333333333333333");
+        System.out.println("444444444444");
         SpringApplication.run(HospitalizationApplication.class, args);
     }
 
