@@ -16,9 +16,7 @@ public class InterfaceAuthApp {
 
 
         public static void main(String[] args) {
-
             SpringApplication.run(InterfaceAuthApp.class,args);
-
         }
 
 }
