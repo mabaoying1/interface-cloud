@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 public class HospitalizationApplication {
 
     public static void main(String[] args) {
+
+
         SpringApplication.run(HospitalizationApplication.class, args);
     }
 
