@@ -25,7 +25,7 @@ public class HospitalizationApplication {
 
     public static void main(String[] args) {
 
-
+        System.out.println("11111111111111");
         SpringApplication.run(HospitalizationApplication.class, args);
     }
 
